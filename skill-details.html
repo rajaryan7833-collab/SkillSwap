@@ -4,88 +4,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0b1020">
-    <title>SkillSwap | Learning Center</title>
+    <title>SkillSwap | Skill Learning</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <main class="dashboard">
+<header class="main-header">
+    <a href="dashboard.html" class="brand">Skill<span>Swap</span></a>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+</header>
 
-        <header class="top-header">
-            <div class="brand">
-                <span class="brand-logo">🔄</span>
-                <h2>SkillSwap</h2>
+<nav class="side-menu" id="sideMenu">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html">My Profile</a>
+    <a href="teach.html">Teach Skills</a>
+    <a href="learn.html">Learn Skills</a>
+    <a href="students.html">Find Students</a>
+    <a href="#" onclick="logoutUser()">Logout</a>
+</nav>
+
+<main class="page-container">
+
+    <section class="dashboard-welcome">
+        <p>YOUR LEARNING SPACE</p>
+        <h1 id="skillTitle">Loading Skill...</h1>
+        <p id="skillDescription">
+            Explore learning resources and improve your knowledge.
+        </p>
+        <p>
+            Level:
+            <strong id="skillLevel">Loading...</strong>
+        </p>
+    </section>
+
+    <section class="dashboard-section">
+        <h2>Learning Resources</h2>
+        <p>Choose a section to explore learning materials.</p>
+
+        <div class="card-container">
+            <button type="button" onclick="showLearningSection('notes')">
+                📘 Notes
+            </button>
+
+            <button type="button" onclick="showLearningSection('tutorials')">
+                🎥 Tutorials
+            </button>
+
+            <button type="button" onclick="showLearningSection('practice')">
+                📝 Practice
+            </button>
+
+            <button type="button" onclick="showLearningSection('practicals')">
+                💻 Practicals
+            </button>
+        </div>
+    </section>
+
+    <section class="dashboard-section learning-content">
+
+        <div id="notes" class="learning-section">
+            <h2>📘 Study Notes</h2>
+            <div id="notesList">
+                Loading notes...
             </div>
-            <button type="button" onclick="history.back()">← Back</button>
-        </header>
+        </div>
 
-        <section class="dashboard-welcome">
-            <h1 id="skillTitle">Loading Skill...</h1>
-            <p id="skillDescription">Your learning journey starts here.</p>
-            <p id="skillLevel"></p>
-        </section>
-
-        <section class="dashboard-section">
-            <h2>Learning Center</h2>
-
-            <div class="cards">
-                <div class="card">
-                    <h3>📖 Study Notes</h3>
-                    <button onclick="showLearningSection('notes')">Open Notes</button>
-                </div>
-
-                <div class="card">
-                    <h3>🎥 Tutorials</h3>
-                    <button onclick="showLearningSection('tutorials')">Open Tutorials</button>
-                </div>
-
-                <div class="card">
-                    <h3>✍️ Practice</h3>
-                    <button onclick="showLearningSection('practice')">Practice Questions</button>
-                </div>
-
-                <div class="card">
-                    <h3>💻 Practicals</h3>
-                    <button onclick="showLearningSection('practicals')">Open Practicals</button>
-                </div>
+        <div id="tutorials" class="learning-section">
+            <h2>🎥 Video Tutorials</h2>
+            <div id="tutorialList">
+                Loading tutorials...
             </div>
-        </section>
+        </div>
 
-        <section id="notes" class="learning-section">
-            <h2>Study Notes</h2>
-            <div id="notesList">Loading notes...</div>
-        </section>
+        <div id="practice" class="learning-section">
+            <h2>📝 Practice Questions</h2>
+            <div id="practiceList">
+                Loading practice questions...
+            </div>
+        </div>
 
-        <section id="tutorials" class="learning-section" hidden>
-            <h2>Tutorials</h2>
-            <div id="tutorialList">Loading tutorials...</div>
-        </section>
+        <div id="practicals" class="learning-section">
+            <h2>💻 Practical Work</h2>
+            <div id="practicalList">
+                Loading practicals...
+            </div>
+        </div>
 
-        <section id="practice" class="learning-section" hidden>
-            <h2>Practice Questions</h2>
-            <div id="practiceList">Loading questions...</div>
-        </section>
+    </section>
 
-        <section id="practicals" class="learning-section" hidden>
-            <h2>Practical Programs</h2>
-            <div id="practicalList">Loading practicals...</div>
-        </section>
+    <section class="dashboard-section">
+        <h2>Shared Study Materials</h2>
+        <div id="sharedMaterials">
+            Loading shared materials...
+        </div>
+    </section>
 
-        <section class="dashboard-section">
-            <h2>Shared Study Materials</h2>
-            <div id="sharedMaterials">Loading materials...</div>
-        </section>
+</main>
 
-    </main>
+<footer class="main-footer">
+    <p>© 2026 SkillSwap | Learn Together. Grow Together.</p>
+</footer>
 
-    <script>
-        function showLearningSection(sectionId) {
-            document.querySelectorAll(".learning-section").forEach(function(section) {
-                section.hidden = section.id !== sectionId;
-            });
-        }
-    </script>
+<script src="script.js"></script>
+<script type="module" src="skill-details.js"></script>
 
-    <script type="module" src="skill-details.js"></script>
 </body>
 </html>
+<div style="margin-bottom:20px;">
+    <a href="dashboard.html"
+       style="
+       display:inline-block;
+       padding:12px 22px;
+       background:linear-gradient(135deg,#7c3aed,#4f46e5);
+       color:white;
+       text-decoration:none;
+       border-radius:12px;
+       font-weight:600;">
+       ← Back to Dashboard
+    </a>
+</div>

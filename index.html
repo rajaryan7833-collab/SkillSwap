@@ -1,133 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="description" content="SkillSwap helps students exchange skills, share knowledge and learn together.">
-
-    <title>SkillSwap - Learn, Share and Grow</title>
-
+    <meta name="theme-color" content="#080b18">
+    <meta name="description" content="SkillSwap - Learn Together, Grow Together. Share skills and connect with students.">
+    <title>SkillSwap | Learn Together, Grow Together</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <!-- Navigation -->
-    <nav>
-        <h2>SkillSwap.</h2>
+<header class="top-header">
+    <div class="brand">
+        <span class="brand-logo">♾️</span>
+        <h2>SkillSwap</h2>
+    </div>
 
-        <div>
-            <a href="#home">Home</a>
-            <a href="#skills">Explore Skills</a>
-            <a href="#about">About</a>
-        </div>
+    <button type="button" onclick="toggleMenu()">☰</button>
 
-        <button onclick="window.location.href='login.html'">
-            Join Now
-        </button>
+    <nav class="side-menu" id="sideMenu">
+        <a href="index.html">Home</a>
+        <a href="#features">Features</a>
+        <a href="#how">How It Works</a>
+        <a href="#about">About</a>
+        <a href="login.html">Login</a>
     </nav>
+</header>
 
+<main class="dashboard">
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-
-        <p class="tag">WELCOME TO SKILLSWAP</p>
-
-        <h1>
-            Learn Skills.<br>
-            Share Knowledge.<br>
-            <span>Grow Together.</span>
-        </h1>
-
-        <p class="description">
-            Exchange your skills with other students.
-            Teach what you know and learn what you love.
-            Build connections and grow together.
-        </p>
-
-        <button onclick="window.location.href='login.html'">
-            Get Started →
-        </button>
-
-    </section>
-
-
-    <!-- Popular Skills -->
-    <section class="skills" id="skills">
-
-        <h2>Explore Popular Skills</h2>
-
-        <p>Discover skills and learn something new.</p>
-
-        <div class="cards">
-
-            <div class="card">
-                <h3>💻 C Programming</h3>
-                <p>Learn programming fundamentals and problem-solving.</p>
-            </div>
-
-            <div class="card">
-                <h3>🌐 Web Development</h3>
-                <p>Build modern websites and explore web technologies.</p>
-            </div>
-
-            <div class="card">
-                <h3>🎨 Graphic Design</h3>
-                <p>Develop your creativity and learn designing skills.</p>
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- How It Works -->
-    <section class="skills" id="how-it-works">
-
-        <h2>How SkillSwap Works</h2>
-
-        <div class="cards">
-
-            <div class="card">
-                <h3>1. Create Profile</h3>
-                <p>Register and introduce yourself to other students.</p>
-            </div>
-
-            <div class="card">
-                <h3>2. Share Skills</h3>
-                <p>Add the skills you can teach and want to learn.</p>
-            </div>
-
-            <div class="card">
-                <h3>3. Connect & Learn</h3>
-                <p>Connect with students and exchange knowledge.</p>
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- About -->
-    <footer id="about">
-
-        <h2>About SkillSwap</h2>
+<section class="hero">
+    <div>
+        <p>🚀 THE STUDENT SKILL-SHARING PLATFORM</p>
+        <h1>Learn Together.<br>
+        Grow <span style="color:#a78bfa">Together.</span></h1>
 
         <p>
-            SkillSwap is a student-focused skill exchange platform
-            designed to encourage collaborative learning.
+            Share your knowledge, discover new skills and
+            connect with talented students.
         </p>
 
-        <p>
-            SkillSwap © 2026 | Learn Together, Grow Together.
-        </p>
+        <button onclick="joinNow()">Get Started →</button>
+        <a href="#features">Explore Features ↓</a>
+    </div>
+</section>
 
-    </footer>
+<section id="features" class="dashboard-section">
+    <h2>Everything You Need to Grow</h2>
+    <p>One platform. Multiple opportunities.</p>
 
+    <div class="cards">
 
-    <script src="script.js"></script>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=700&q=80" alt="Students collaborating">
+            <h3>🎯 Teach Skills</h3>
+            <p>Share your knowledge and help other students learn.</p>
+            <a href="teach.html">Start Teaching →</a>
+        </div>
 
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=700&q=80" alt="Online learning">
+            <h3>📚 Learn Skills</h3>
+            <p>Explore skills, study materials and learning resources.</p>
+            <a href="learn.html">Start Learning →</a>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=700&q=80" alt="Student community">
+            <h3>👥 Find Students</h3>
+            <p>Discover students with similar interests and goals.</p>
+            <a href="students.html">Find Students →</a>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1611746872915-64382b5c76da?auto=format&fit=crop&w=700&q=80" alt="Online communication">
+            <h3>💬 Real-time Chat</h3>
+            <p>Connect and communicate with your learning partners.</p>
+            <a href="login.html">Connect Now →</a>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=700&q=80" alt="Technology workspace">
+            <h3>💻 Learning Center</h3>
+            <p>Access notes, tutorials, practice and practical resources.</p>
+            <a href="learn.html">Explore Learning →</a>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=700&q=80" alt="Student working online">
+            <h3>🔔 Stay Updated</h3>
+            <p>Receive in-app notifications about your connections and chats.</p>
+            <a href="login.html">Join SkillSwap →</a>
+        </div>
+
+    </div>
+</section>
+
+<section id="how" class="dashboard-section">
+    <h2>How SkillSwap Works</h2>
+
+    <div class="cards">
+        <div class="card">
+            <h3>01. Register</h3>
+            <p>Create your student account securely.</p>
+        </div>
+
+        <div class="card">
+            <h3>02. Share Skills</h3>
+            <p>Add the skills you can teach.</p>
+        </div>
+
+        <div class="card">
+            <h3>03. Discover</h3>
+            <p>Explore skills shared by other students.</p>
+        </div>
+
+        <div class="card">
+            <h3>04. Connect</h3>
+            <p>Send requests and communicate with students.</p>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="dashboard-about">
+    <h2>About SkillSwap</h2>
+    <p>
+        SkillSwap is designed to create a collaborative learning
+        community where students can exchange knowledge,
+        develop practical skills and grow together.
+    </p>
+    <h3>Learn Together. Grow Together. ✨</h3>
+</section>
+
+</main>
+
+<footer>
+    <h2>♾️ SkillSwap</h2>
+    <p>Made for students, powered by learning.</p>
+    <p>© 2026 SkillSwap. All rights reserved.</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>

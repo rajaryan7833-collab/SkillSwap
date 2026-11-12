@@ -1,140 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="description" content="Find students, discover skills and connect with learners on SkillSwap.">
-
-    <title>Find Students | SkillSwap</title>
-
+    <meta name="theme-color" content="#0b1020">
+    <title>SkillSwap | Find Students</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <!-- HEADER -->
+<header class="main-header">
+    <a href="dashboard.html" class="brand">Skill<span>Swap</span></a>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+</header>
 
-    <header class="top-header">
+<nav class="side-menu" id="sideMenu">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html">My Profile</a>
+    <a href="teach.html">Teach Skills</a>
+    <a href="learn.html">Learn Skills</a>
+    <a href="students.html" class="active">Find Students</a>
+    <a href="#" onclick="logoutUser()">Logout</a>
+</nav>
 
-        <div class="brand">
-            <span class="brand-logo">🔄</span>
-            <h2>SkillSwap</h2>
-        </div>
+<main class="page-container">
 
-        <div class="header-actions">
-
-            <button
-                class="profile-button"
-                onclick="window.location.href='profile.html'"
-                aria-label="My Profile"
-            >
-                <span id="headerProfileInitials">AR</span>
-            </button>
-
-            <button
-                class="menu-button"
-                onclick="toggleMenu()"
-                aria-label="Open menu"
-            >
-                ☰
-            </button>
-
-        </div>
-
-    </header>
-
-
-    <!-- NAVIGATION -->
-
-    <nav id="sideMenu" class="side-menu">
-
-        <a href="dashboard.html">Dashboard</a>
-        <a href="profile.html">My Profile</a>
-        <a href="teach.html">Teach a Skill</a>
-        <a href="learn.html">Learn a Skill</a>
-        <a href="students.html">Find Students</a>
-
-        <button onclick="logoutUser()">Logout</button>
-
-    </nav>
-
-
-    <!-- MAIN CONTENT -->
-
-    <main class="dashboard">
-
+    <section class="dashboard-welcome">
+        <p>CONNECT • COLLABORATE • SUCCEED</p>
         <h1>Find Your Learning Partners 🤝</h1>
+        <p>Connect with students, discover their skills and build a community where everyone can learn from each other.</p>
+    </section>
 
-        <p>
-            Discover students, explore their skills
-            and connect with them.
-        </p>
+    <section class="dashboard-section">
+        <h2>Search Students</h2>
+        <p>Find students by their name, college or skills.</p>
 
-
-        <!-- SEARCH STUDENTS -->
-
-        <section>
-
-            <h2>Search Students</h2>
-
+        <div class="form-card">
             <input
                 type="search"
                 id="studentSearch"
-                placeholder="Search by student name, college or skill..."
-                maxlength="100"
+                placeholder="Search students..."
                 autocomplete="off"
             >
+        </div>
+    </section>
 
-        </section>
+    <section class="dashboard-section">
+        <h2>Available Students</h2>
 
+        <div id="studentList" class="card-container">
+            <p>Loading students...</p>
+        </div>
+    </section>
 
-        <!-- AVAILABLE STUDENTS -->
+    <section class="dashboard-section">
+        <h2>Connection Requests</h2>
+        <p>Check requests received from other students.</p>
 
-        <section>
+        <div id="connectionRequests" class="card-container">
+            <p>Loading connection requests...</p>
+        </div>
+    </section>
 
-            <h2>Available Students</h2>
+    <section class="dashboard-about">
+        <h2>Learn Together, Grow Together</h2>
+        <p>SkillSwap helps students connect, exchange knowledge and improve their skills through collaboration.</p>
+    </section>
 
-            <div class="cards" id="studentList">
+</main>
 
-                <p>Loading students...</p>
+<footer class="main-footer">
+    <p>© 2026 SkillSwap | Built for Student Collaboration.</p>
+</footer>
 
-            </div>
-
-        </section>
-
-
-        <!-- CONNECTION REQUESTS -->
-
-        <section>
-
-            <h2>My Connection Requests 🔔</h2>
-
-            <div class="cards" id="connectionRequests">
-
-                <p>Loading connection requests...</p>
-
-            </div>
-
-        </section>
-
-
-        <p>
-            <a href="dashboard.html">← Back to Dashboard</a>
-        </p>
-
-    </main>
-
-
-    <!-- JAVASCRIPT -->
-
-    <script src="script.js"></script>
-
-    <script
-        type="module"
-        src="students-firebase.js">
-    </script>
+<script src="script.js"></script>
+<script type="module" src="students-firebase.js"></script>
 
 </body>
 </html>

@@ -3,127 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Share your skills and study materials on SkillSwap.">
-    <title>Teach a Skill | SkillSwap</title>
+    <meta name="theme-color" content="#080b18">
+    <title>SkillSwap | Teach Skills</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .teach-hero {
+            padding: 38px;
+            border-radius: 23px;
+            border: 1px solid var(--premium-border);
+            background:
+                linear-gradient(100deg,rgba(8,11,24,.96),rgba(42,24,83,.78)),
+                url("https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1400&q=85") center/cover;
+            margin-bottom: 28px;
+        }
+        .teach-grid {
+            display: grid;
+            grid-template-columns: repeat(2,minmax(0,1fr));
+            gap: 22px;
+        }
+        .teach-card {
+            padding: 25px;
+            background: var(--premium-surface);
+            border: 1px solid var(--premium-border);
+            border-radius: 20px;
+        }
+        .teach-card form {
+            display: grid;
+            gap: 12px;
+        }
+        .teach-card label {
+            color: #dbeafe;
+            font-size: 14px;
+        }
+        .teach-card input,
+        .teach-card textarea,
+        .teach-card select {
+            width: 100%;
+        }
+        .teach-card textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .teach-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        @media(max-width:750px) {
+            .teach-grid { grid-template-columns: 1fr; }
+            .teach-hero { padding: 25px 18px; }
+        }
+    </style>
 </head>
-
 <body>
 
-    <header class="top-header">
-        <div class="brand">
-            <span class="brand-logo">🔄</span>
-            <h2>SkillSwap</h2>
-        </div>
+<header class="top-header">
+    <div class="brand">
+        <span class="brand-logo">♾️</span>
+        <h2>SkillSwap</h2>
+    </div>
+    <button type="button" onclick="toggleMenu()">☰</button>
+</header>
 
-        <div class="header-actions">
-            <button class="profile-button"
-                onclick="window.location.href='profile.html'"
-                aria-label="My Profile">
-                <span id="headerProfileInitials">AR</span>
-            </button>
+<nav class="side-menu" id="sideMenu">
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="profile.html">👤 My Profile</a>
+    <a href="teach.html">🎯 Teach Skills</a>
+    <a href="learn.html">📚 Learn Skills</a>
+    <a href="students.html">👥 Find Students</a>
+    <a href="#" onclick="logoutUser();return false;">🚪 Logout</a>
+</nav>
 
-            <button class="menu-button"
-                onclick="toggleMenu()"
-                aria-label="Open menu">☰</button>
-        </div>
-    </header>
+<main class="dashboard">
 
-    <nav id="sideMenu" class="side-menu">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="profile.html">My Profile</a>
-        <a href="teach.html">Teach a Skill</a>
-        <a href="learn.html">Learn a Skill</a>
-        <a href="students.html">Find Students</a>
-        <button onclick="logoutUser()">Logout</button>
-    </nav>
+    <section class="teach-hero">
+        <p style="color:#c4b5fd;font-weight:700">SHARE YOUR KNOWLEDGE</p>
+        <h1>Teach What You Know.</h1>
+        <h1 style="color:#c4b5fd">Inspire Someone.</h1>
+        <p style="max-width:600px;color:#e2e8f0;line-height:1.8">
+            Your knowledge can help another student grow.
+            Add your skills and share useful learning resources.
+        </p>
+    </section>
 
-    <main class="dashboard">
+    <div class="teach-grid">
 
-        <h1>Share Your Skills 💡</h1>
-        <p>Teach what you know and help other students grow.</p>
+        <section class="teach-card">
+            <div class="teach-icon">🎯</div>
+            <h2>Add a New Skill</h2>
+            <p style="color:#a5b4cf;margin:8px 0 20px">
+                Tell students what you can teach.
+            </p>
 
-        <!-- ADD SKILL FORM -->
-        <form id="teachForm" class="card">
+            <form id="teachForm">
 
-            <h2>Add a Skill</h2>
+                <label for="studentName">Your Name</label>
+                <input type="text" id="studentName" placeholder="Your name" required>
 
-            <label for="studentName">Your Name</label>
-            <input type="text" id="studentName"
-                placeholder="Enter your name"
-                maxlength="60" required>
+                <label for="skillName">Skill Name</label>
+                <input type="text" id="skillName" placeholder="e.g. C Programming" required>
 
-            <label for="skillName">Skill You Can Teach</label>
-            <input type="text" id="skillName"
-                placeholder="Example: C Programming"
-                maxlength="80" required>
+                <label for="skillDescription">Description</label>
+                <textarea id="skillDescription" placeholder="Describe what you can teach..." required></textarea>
 
-            <label for="skillDescription">Skill Description</label>
-            <textarea id="skillDescription"
-                placeholder="Describe what you can teach..."
-                rows="4" maxlength="500" required></textarea>
+                <label for="skillLevel">Your Skill Level</label>
+                <select id="skillLevel" required>
+                    <option value="">Select your level</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                </select>
 
-            <label for="skillLevel">Your Skill Level</label>
-            <select id="skillLevel" required>
-                <option value="">Select Skill Level</option>
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-            </select>
+                <button type="submit" id="addSkillButton">Publish My Skill →</button>
+            </form>
+        </section>
 
-            <button type="submit" id="addSkillButton">
-                Add My Skill
-            </button>
+        <section class="teach-card">
+            <div class="teach-icon">📚</div>
+            <h2>Share Study Material</h2>
+            <p style="color:#a5b4cf;margin:8px 0 20px">
+                Share notes, videos and useful learning links.
+            </p>
 
-        </form>
+            <form id="materialForm">
 
-        <!-- SHARE STUDY MATERIAL FORM -->
-        <form id="materialForm" class="card">
+                <label for="materialSkill">Select Your Skill</label>
+                <select id="materialSkill" required>
+                    <option value="">Loading your skills...</option>
+                </select>
 
-            <h2>📚 Share Study Material</h2>
+                <label for="materialTitle">Material Title</label>
+                <input type="text" id="materialTitle" placeholder="e.g. C Programming Notes" required>
 
-            <p>Share notes, PDFs, tutorials or useful learning links.</p>
+                <label for="materialType">Resource Type</label>
+                <select id="materialType" required>
+                    <option value="">Select resource type</option>
+                    <option value="PDF">PDF</option>
+                    <option value="Video">Video</option>
+                    <option value="Link">Link</option>
+                </select>
 
-            <label for="materialSkill">Select Skill</label>
-            <select id="materialSkill" required>
-                <option value="">Loading skills...</option>
-            </select>
+                <label for="resourceUrl">Resource URL</label>
+                <input type="url" id="resourceUrl" placeholder="https://..." required>
 
-            <label for="materialTitle">Material Title</label>
-            <input type="text" id="materialTitle"
-                placeholder="Example: C Programming Notes"
-                maxlength="100" required>
+                <label for="materialDescription">Description</label>
+                <textarea id="materialDescription" placeholder="Describe this material..."></textarea>
 
-            <label for="materialType">Material Type</label>
-            <select id="materialType" required>
-                <option value="">Select Material Type</option>
-                <option value="PDF">PDF Notes</option>
-                <option value="Video">Video Tutorial</option>
-                <option value="Link">Learning Link</option>
-            </select>
+                <button type="submit" id="shareMaterialButton">Share Material →</button>
+            </form>
+        </section>
 
-            <label for="resourceUrl">Google Drive / Resource Link</label>
-            <input type="url" id="resourceUrl"
-                placeholder="https://..."
-                maxlength="1000" required>
+    </div>
 
-            <label for="materialDescription">Description</label>
-            <textarea id="materialDescription"
-                placeholder="Explain what students will learn..."
-                rows="3" maxlength="500" required></textarea>
+    <section class="dashboard-about">
+        <h2>💡 Why Share Knowledge?</h2>
+        <p>
+            Teaching helps you strengthen your own understanding.
+            By sharing useful resources, you make learning easier
+            for the entire SkillSwap community.
+        </p>
+    </section>
 
-            <button type="submit" id="shareMaterialButton">
-                Share Material
-            </button>
+</main>
 
-        </form>
+<footer>
+    <p>© 2026 SkillSwap | Learn Together. Grow Together.</p>
+</footer>
 
-        <p><a href="dashboard.html">← Back to Dashboard</a></p>
-
-    </main>
-
-    <script src="script.js"></script>
-    <script type="module" src="teach-firebase.js"></script>
-
+<script src="script.js"></script>
+<script type="module" src="teach-firebase.js"></script>
 </body>
 </html>

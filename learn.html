@@ -1,127 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="description" content="Explore skills shared by students and choose what you want to learn on SkillSwap.">
-
-    <title>Learn Skills | SkillSwap</title>
-
+    <meta name="theme-color" content="#080b18">
+    <title>SkillSwap | Learn Skills</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <!-- HEADER -->
+<header class="top-header">
+    <div class="brand">
+        <span class="brand-logo">♾️</span>
+        <h2>SkillSwap</h2>
+    </div>
+    <button type="button" onclick="toggleMenu()">☰</button>
+</header>
 
-    <header class="top-header">
+<nav class="side-menu" id="sideMenu">
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="profile.html">👤 My Profile</a>
+    <a href="teach.html">🎯 Teach Skills</a>
+    <a href="learn.html">📚 Learn Skills</a>
+    <a href="students.html">👥 Find Students</a>
+    <a href="#" onclick="logoutUser();return false;">🚪 Logout</a>
+</nav>
 
-        <div class="brand">
-            <span class="brand-logo">🔄</span>
-            <h2>SkillSwap</h2>
-        </div>
+<main class="dashboard">
 
-        <div class="header-actions">
-
-            <button
-                class="profile-button"
-                onclick="window.location.href='profile.html'"
-                aria-label="My Profile"
-            >
-                <span id="headerProfileInitials">AR</span>
-            </button>
-
-            <button
-                class="menu-button"
-                onclick="toggleMenu()"
-                aria-label="Open menu"
-            >
-                ☰
-            </button>
-
-        </div>
-
-    </header>
-
-
-    <!-- NAVIGATION -->
-
-    <nav id="sideMenu" class="side-menu">
-
-        <a href="dashboard.html">Dashboard</a>
-        <a href="profile.html">My Profile</a>
-        <a href="teach.html">Teach a Skill</a>
-        <a href="learn.html">Learn a Skill</a>
-        <a href="students.html">Find Students</a>
-
-        <button onclick="logoutUser()">Logout</button>
-
-    </nav>
-
-
-    <!-- MAIN CONTENT -->
-
-    <main class="dashboard">
-
-        <h1>Explore Skills 📚</h1>
-
-        <p>
-            Discover what other students can teach
-            and choose something new to learn.
+    <section class="teach-hero">
+        <p style="color:#c4b5fd;font-weight:700">EXPLORE & LEARN</p>
+        <h1>Discover New Skills.</h1>
+        <h1 style="color:#c4b5fd">Grow Together.</h1>
+        <p style="color:#e2e8f0;max-width:650px;line-height:1.8">
+            Explore programming, technology and other skills.
+            Learn from students and improve your knowledge.
         </p>
+    </section>
 
-
-        <!-- AVAILABLE SKILLS -->
-
-        <section>
-
-            <h2>Available Skills</h2>
-
-            <div class="cards" id="learnSkills">
-
-                <p>Loading available skills...</p>
-
-            </div>
-
-        </section>
-
-
-        <!-- SELECTED SKILLS -->
-
-        <section>
-
-            <h2>My Selected Skills ⭐</h2>
-
-            <p>
-                Skills you have selected to learn will appear here.
-            </p>
-
-            <div class="cards" id="selectedSkills">
-
-                <p>Loading your selected skills...</p>
-
-            </div>
-
-        </section>
-
-
-        <p>
-            <a href="dashboard.html">← Back to Dashboard</a>
+    <section class="teach-card" style="margin-bottom:25px">
+        <h2>📚 Available Skills</h2>
+        <p style="color:#a5b4cf;margin:10px 0 20px">
+            Choose a skill and start learning.
         </p>
+        <div id="learnSkills" class="card-container">
+            Loading available skills...
+        </div>
+    </section>
 
-    </main>
+    <section class="teach-card">
+        <h2>⭐ My Selected Skills</h2>
+        <p style="color:#a5b4cf;margin:10px 0 20px">
+            Your selected learning courses.
+        </p>
+        <div id="selectedSkills" class="card-container">
+            Loading your selected skills...
+        </div>
+    </section>
 
+    <div style="margin-top:25px">
+        <a href="dashboard.html" style="
+            display:inline-block;
+            padding:12px 22px;
+            background:linear-gradient(135deg,#7c3aed,#4f46e5);
+            color:white;
+            text-decoration:none;
+            border-radius:12px;
+            font-weight:600;">
+            ← Back to Dashboard
+        </a>
+    </div>
 
-    <!-- JAVASCRIPT -->
+</main>
 
-    <script src="script.js"></script>
+<footer>
+    <p>© 2026 SkillSwap | Learn Together. Grow Together.</p>
+</footer>
 
-    <script
-        type="module"
-        src="learn-firebase.js">
-    </script>
+<script src="script.js"></script>
+<script type="module" src="learn-firebase.js"></script>
 
 </body>
 </html>

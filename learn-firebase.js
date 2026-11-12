@@ -14,326 +14,302 @@ import {
     arrayRemove
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
+// =====================================
+// SKILLSWAP - LEARN SKILLS
+// =====================================
 
-const learnSkills = document.getElementById("learnSkills");
-const selectedSkills = document.getElementById("selectedSkills");
+const learnContainer = document.getElementById("learnSkills");
+const selectedContainer = document.getElementById("selectedSkills");
 
 let currentUser = null;
-let allSkills = [];
 let selectedSkillIds = [];
 
+// Built-in courses
+const starterCourses = [
+    {
+        id: "starter-c",
+        name: "C Programming",
+        description: "Learn C programming from basics to problem solving.",
+        level: "Beginner",
+        icon: "💻"
+    },
+    {
+        id: "starter-cpp",
+        name: "C++ Programming",
+        description: "Explore C++ concepts and object-oriented programming.",
+        level: "Beginner",
+        icon: "⚙️"
+    },
+    {
+        id: "starter-java",
+        name: "Java Programming",
+        description: "Learn Java, classes, objects and programming fundamentals.",
+        level: "Beginner",
+        icon: "☕"
+    },
+    {
+        id: "starter-python",
+        name: "Python",
+        description: "Start coding with Python through easy examples.",
+        level: "Beginner",
+        icon: "🐍"
+    },
+    {
+        id: "starter-web-development",
+        name: "Web Development",
+        description: "Learn HTML, CSS and JavaScript to build websites.",
+        level: "Beginner",
+        icon: "🌐"
+    }
+];
 
-// GET SKILL NAME
-function getSkillTitle(data) {
-    const title =
-        data.skill ||
-        data.skillName ||
-        data.title ||
-        "";
+let allSkills = [...starterCourses];
 
-    return typeof title === "string" ? title.trim() : "";
-}
-
-
-// GET TEACHER NAME
-function getTeacherName(skill) {
-    return (
-        skill.name ||
-        skill.teacherName ||
-        skill.displayName ||
-        "Student"
-    );
-}
-
-
+// =====================================
 // CREATE SKILL CARD
-function createSkillCard(skill) {
+// =====================================
+
+function createSkillCard(skill, isSelectedPage = false) {
 
     const card = document.createElement("div");
     card.className = "card";
 
+    card.style.cssText = `
+        background:linear-gradient(145deg,#151e32,#202b45);
+        border:1px solid rgba(139,92,246,.3);
+        border-radius:18px;
+        padding:22px;
+        margin:10px;
+        min-width:220px;
+        flex:1;
+        color:white;
+        box-shadow:0 8px 25px rgba(0,0,0,.18);
+    `;
+
     const heading = document.createElement("h3");
-    heading.textContent = getSkillTitle(skill);
-
-    const name = document.createElement("p");
-
-    if (skill.uid === currentUser.uid) {
-        name.textContent = "You are teaching this skill";
-
-    } else if (skill.uid === "system") {
-        name.textContent = "Teacher not assigned yet";
-
-    } else {
-        name.textContent = "By: " + getTeacherName(skill);
-    }
+    heading.textContent = (skill.icon || "📘") + " " + skill.name;
+    heading.style.marginBottom = "12px";
 
     const description = document.createElement("p");
-    description.textContent =
-        skill.description || "No description available.";
+    description.textContent = skill.description || "Explore this skill and start learning.";
+    description.style.cssText = "color:#cbd5e1;line-height:1.6;min-height:55px;";
 
     const level = document.createElement("p");
-    level.textContent =
-        "Level: " + (skill.level || "Not specified");
+    level.textContent = "Level: " + (skill.level || "Beginner");
+    level.style.cssText = "color:#c4b5fd;margin:12px 0;font-size:14px;";
 
-    card.append(heading, name, description, level);
+    const startButton = document.createElement("button");
+    startButton.textContent = "Start Learning →";
+
+    startButton.style.cssText = `
+        width:100%;
+        padding:12px;
+        margin-top:8px;
+        border:0;
+        border-radius:10px;
+        color:white;
+        background:linear-gradient(135deg,#7c3aed,#4f46e5);
+        font-weight:600;
+        cursor:pointer;
+    `;
+
+    startButton.addEventListener("click", function() {
+        window.location.href =
+            "skill-details.html?skillId=" +
+            encodeURIComponent(skill.id);
+    });
+
+    card.append(heading, description, level, startButton);
+
+    if (!skill.id.startsWith("starter-")) {
+
+        const selectButton = document.createElement("button");
+
+        const alreadySelected =
+            selectedSkillIds.includes(skill.id);
+
+        selectButton.textContent = alreadySelected
+            ? "Remove from My Skills"
+            : "＋ Select Skill";
+
+        selectButton.style.cssText = `
+            width:100%;
+            padding:11px;
+            margin-top:10px;
+            border:1px solid #8b5cf6;
+            border-radius:10px;
+            color:white;
+            background:#27324a;
+            cursor:pointer;
+        `;
+
+        selectButton.addEventListener("click", async function() {
+
+            selectButton.disabled = true;
+
+            try {
+                await toggleSkillSelection(skill.id);
+                renderAllSkills();
+
+            } catch (error) {
+                console.error(error);
+                alert("Unable to update skill. Please try again.");
+                selectButton.disabled = false;
+            }
+        });
+
+        card.appendChild(selectButton);
+    }
 
     return card;
 }
 
+// =====================================
+// LOAD SELECTED SKILLS
+// =====================================
 
-// OPEN LEARNING PAGE
-function openLearningPage(skillId) {
+async function loadSelectedSkills() {
 
-    window.location.href =
-        "skill-details.html?skillId=" +
-        encodeURIComponent(skillId);
+    const profileRef = doc(
+        db,
+        "studentProfiles",
+        currentUser.uid
+    );
+
+    const profileSnapshot = await getDoc(profileRef);
+
+    if (profileSnapshot.exists()) {
+        const profile = profileSnapshot.data();
+
+        selectedSkillIds = Array.isArray(profile.selectedSkillIds)
+            ? profile.selectedSkillIds
+            : [];
+    } else {
+        selectedSkillIds = [];
+    }
 }
 
+// =====================================
+// SELECT / REMOVE SKILL
+// =====================================
 
-// SHOW AVAILABLE SKILLS
-function displayAvailableSkills() {
+async function toggleSkillSelection(skillId) {
 
-    learnSkills.innerHTML = "";
+    const profileRef = doc(
+        db,
+        "studentProfiles",
+        currentUser.uid
+    );
 
-    if (allSkills.length === 0) {
-        learnSkills.textContent = "No skills available yet.";
-        return;
-    }
+    const profileSnapshot = await getDoc(profileRef);
 
-    allSkills.forEach(function(item) {
+    if (selectedSkillIds.includes(skillId)) {
 
-        const skill = item.data;
-        const skillId = item.id;
-
-        const card = createSkillCard(skill);
-        const button = document.createElement("button");
-
-        if (skill.uid === currentUser.uid) {
-
-            button.textContent = "Your Skill";
-            button.disabled = true;
-
-        } else if (selectedSkillIds.includes(skillId)) {
-
-            button.textContent = "Already Selected";
-            button.disabled = true;
-
-        } else {
-
-            button.textContent = "Select to Learn";
-
-            button.addEventListener("click", function() {
-                selectSkill(skillId, button);
-            });
+        if (profileSnapshot.exists()) {
+            await setDoc(profileRef, {
+                selectedSkillIds: arrayRemove(skillId)
+            }, { merge: true });
         }
 
-        card.appendChild(button);
-        learnSkills.appendChild(card);
-
-    });
-}
-
-
-// SHOW SELECTED SKILLS
-function displaySelectedSkills() {
-
-    selectedSkills.innerHTML = "";
-
-    const mySelectedSkills = allSkills.filter(function(item) {
-        return selectedSkillIds.includes(item.id);
-    });
-
-    if (mySelectedSkills.length === 0) {
-
-        selectedSkills.textContent =
-            "You haven't selected any skills yet.";
-
-        return;
-    }
-
-    mySelectedSkills.forEach(function(item) {
-
-        const card = createSkillCard(item.data);
-
-        const openButton = document.createElement("button");
-        openButton.textContent = "Open Learning";
-
-        openButton.addEventListener("click", function() {
-            openLearningPage(item.id);
-        });
-
-        const removeButton = document.createElement("button");
-        removeButton.textContent = "Remove";
-
-        removeButton.addEventListener("click", function() {
-            removeSkill(item.id, removeButton);
-        });
-
-        card.append(openButton, removeButton);
-        selectedSkills.appendChild(card);
-
-    });
-}
-
-
-// SELECT A SKILL
-async function selectSkill(skillId, button) {
-
-    if (!currentUser) return;
-
-    button.disabled = true;
-    button.textContent = "Saving...";
-
-    try {
-
-        const profileRef = doc(
-            db,
-            "studentProfiles",
-            currentUser.uid
+        selectedSkillIds = selectedSkillIds.filter(
+            id => id !== skillId
         );
+
+    } else {
 
         await setDoc(profileRef, {
             selectedSkillIds: arrayUnion(skillId)
-        }, {
-            merge: true
-        });
+        }, { merge: true });
 
-        if (!selectedSkillIds.includes(skillId)) {
-            selectedSkillIds.push(skillId);
-        }
-
-        displayAvailableSkills();
-        displaySelectedSkills();
-
-    } catch (error) {
-
-        console.error("Skill selection error:", error);
-
-        alert("Unable to select skill: " + error.message);
-
-        button.disabled = false;
-        button.textContent = "Select to Learn";
+        selectedSkillIds.push(skillId);
     }
 }
 
+// =====================================
+// LOAD STUDENT-ADDED SKILLS
+// =====================================
 
-// REMOVE SELECTED SKILL
-async function removeSkill(skillId, button) {
-
-    if (!currentUser) return;
-
-    button.disabled = true;
-    button.textContent = "Removing...";
+async function loadStudentSkills() {
 
     try {
-
-        const profileRef = doc(
-            db,
-            "studentProfiles",
-            currentUser.uid
-        );
-
-        await setDoc(profileRef, {
-            selectedSkillIds: arrayRemove(skillId)
-        }, {
-            merge: true
-        });
-
-        selectedSkillIds = selectedSkillIds.filter(function(id) {
-            return id !== skillId;
-        });
-
-        displayAvailableSkills();
-        displaySelectedSkills();
-
-    } catch (error) {
-
-        console.error("Skill removal error:", error);
-
-        alert("Unable to remove skill: " + error.message);
-
-        button.disabled = false;
-        button.textContent = "Remove";
-    }
-}
-
-
-// LOAD SKILLS
-async function loadSkills() {
-
-    learnSkills.textContent = "Loading available skills...";
-    selectedSkills.textContent = "Loading your selected skills...";
-
-    try {
-
-        const profileRef = doc(
-            db,
-            "studentProfiles",
-            currentUser.uid
-        );
-
-        const profileSnapshot = await getDoc(profileRef);
-
-        if (profileSnapshot.exists()) {
-
-            const profileData = profileSnapshot.data();
-
-            selectedSkillIds = Array.isArray(
-                profileData.selectedSkillIds
-            ) ? profileData.selectedSkillIds : [];
-
-        } else {
-
-            selectedSkillIds = [];
-        }
-
-
-        const skillsSnapshot = await getDocs(
+        const snapshot = await getDocs(
             collection(db, "skills")
         );
 
-        allSkills = [];
+        snapshot.forEach(function(skillDoc) {
 
-        skillsSnapshot.forEach(function(skillDocument) {
+            const data = skillDoc.data();
 
-            const data = skillDocument.data();
-            const title = getSkillTitle(data);
+            const name =
+                data.skill ||
+                data.skillName ||
+                data.skillTitle ||
+                data.title ||
+                data.name;
 
-            if (!title) {
-                console.warn(
-                    "Skipped incomplete skill:",
-                    skillDocument.id
-                );
-                return;
-            }
+            if (!name) return;
 
-            data.skill = title;
+            const alreadyExists = allSkills.some(
+                skill => skill.id === skillDoc.id
+            );
+
+            if (alreadyExists) return;
 
             allSkills.push({
-                id: skillDocument.id,
-                data: data
+                id: skillDoc.id,
+                name: name,
+                description: data.description || "Learn from another student.",
+                level: data.level || "Beginner",
+                icon: "🎯"
             });
-
         });
 
-
-        displayAvailableSkills();
-        displaySelectedSkills();
-
     } catch (error) {
-
-        console.error("Skills loading error:", error);
-
-        learnSkills.textContent =
-            "Unable to load skills: " + error.message;
-
-        selectedSkills.textContent =
-            "Unable to load selected skills.";
+        console.error("Student skills loading error:", error);
+        // Built-in courses remain visible even if Firestore fails.
     }
 }
 
+// =====================================
+// DISPLAY SKILLS
+// =====================================
 
-// CHECK LOGIN
+function renderAllSkills() {
+
+    learnContainer.innerHTML = "";
+    selectedContainer.innerHTML = "";
+
+    // Available skills
+    allSkills.forEach(function(skill) {
+        learnContainer.appendChild(
+            createSkillCard(skill)
+        );
+    });
+
+    // Selected skills
+    const selectedSkills = allSkills.filter(
+        skill => selectedSkillIds.includes(skill.id)
+    );
+
+    if (selectedSkills.length === 0) {
+
+        selectedContainer.textContent =
+            "You have not selected any student-added skills yet.";
+
+    } else {
+
+        selectedSkills.forEach(function(skill) {
+            selectedContainer.appendChild(
+                createSkillCard(skill, true)
+            );
+        });
+    }
+}
+
+// =====================================
+// INITIALIZE PAGE
+// =====================================
+
 onAuthStateChanged(auth, async function(user) {
 
     if (!user) {
@@ -343,6 +319,22 @@ onAuthStateChanged(auth, async function(user) {
 
     currentUser = user;
 
-    await loadSkills();
+    learnContainer.innerHTML = "Loading skills...";
+    selectedContainer.innerHTML = "Loading your skills...";
 
+    try {
+
+        await loadSelectedSkills();
+        await loadStudentSkills();
+
+        renderAllSkills();
+
+    } catch (error) {
+
+        console.error("Learn page error:", error);
+
+        // Show built-in courses even if profile loading fails.
+        selectedSkillIds = [];
+        renderAllSkills();
+    }
 });

@@ -1,208 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="description" content="Manage your SkillSwap student profile and skills.">
-
-    <title>My Profile | SkillSwap</title>
-
+    <meta name="theme-color" content="#080b18">
+    <title>SkillSwap | My Profile</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .profile-hero {
+            padding: 35px;
+            border: 1px solid var(--premium-border);
+            border-radius: 22px;
+            background: linear-gradient(110deg,#201342,#111b36);
+            margin-bottom: 28px;
+        }
+        .profile-layout {
+            display: grid;
+            grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+            gap: 22px;
+        }
+        .profile-form-card {
+            padding: 25px;
+            background: var(--premium-surface);
+            border: 1px solid var(--premium-border);
+            border-radius: 20px;
+        }
+        .profile-form-card form {
+            display: grid;
+            gap: 12px;
+        }
+        .profile-form-card label {
+            color: #dbeafe;
+            font-size: 14px;
+        }
+        .profile-form-card input,
+        .profile-form-card textarea {
+            width: 100%;
+        }
+        .profile-form-card textarea {
+            min-height: 95px;
+            resize: vertical;
+        }
+        .profile-display {
+            padding: 25px;
+            background: var(--premium-surface);
+            border: 1px solid var(--premium-border);
+            border-radius: 20px;
+        }
+        .profile-avatar-large {
+            width: 76px;
+            height: 76px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#7c3aed,#a855f7);
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 18px;
+        }
+        @media(max-width:750px) {
+            .profile-layout { grid-template-columns: 1fr; }
+            .profile-hero { padding: 24px 18px; }
+        }
+    </style>
 </head>
-
 <body>
 
-    <!-- HEADER -->
+<header class="top-header">
+    <div class="brand">
+        <span class="brand-logo">♾️</span>
+        <h2>SkillSwap</h2>
+    </div>
+    <button type="button" onclick="toggleMenu()">☰</button>
+</header>
 
-    <header class="top-header">
+<nav class="side-menu" id="sideMenu">
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="profile.html">👤 My Profile</a>
+    <a href="teach.html">🎯 Teach Skills</a>
+    <a href="learn.html">📚 Learn Skills</a>
+    <a href="students.html">👥 Find Students</a>
+    <a href="#" onclick="logoutUser();return false;">🚪 Logout</a>
+</nav>
 
-        <div class="brand">
-            <span class="brand-logo">🔄</span>
-            <h2>SkillSwap</h2>
-        </div>
+<main class="dashboard">
 
-        <div class="header-actions">
+    <section class="profile-hero">
+        <p style="color:#c4b5fd;font-weight:700">YOUR PERSONAL SPACE</p>
+        <h1>Build Your Student Profile</h1>
+        <p>Tell the community about yourself, your interests and the skills you can share.</p>
+    </section>
 
-            <button
-                class="profile-button"
-                onclick="window.location.href='profile.html'"
-                aria-label="My Profile"
-            >
-                <span id="headerProfileInitials">AR</span>
-            </button>
+    <div class="profile-layout">
 
-            <button
-                class="menu-button"
-                onclick="toggleMenu()"
-                aria-label="Open menu"
-            >
-                ☰
-            </button>
+        <section class="profile-form-card">
+            <h2>✏️ Edit Profile</h2>
+            <p style="color:#a5b4cf;margin:8px 0 20px">Update your information below.</p>
 
-        </div>
+            <form id="profileForm">
 
-    </header>
+                <label for="name">Full Name</label>
+                <input type="text" id="name" placeholder="Your full name" required>
 
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" placeholder="Your mobile number">
 
-    <!-- NAVIGATION -->
+                <label for="college">College</label>
+                <input type="text" id="college" placeholder="College name">
 
-    <nav id="sideMenu" class="side-menu">
+                <label for="course">Course</label>
+                <input type="text" id="course" placeholder="e.g. B.Tech CSE">
 
-        <a href="dashboard.html">Dashboard</a>
-        <a href="profile.html">My Profile</a>
-        <a href="teach.html">Teach a Skill</a>
-        <a href="learn.html">Learn a Skill</a>
-        <a href="students.html">Find Students</a>
+                <label for="studyYear">Study Year</label>
+                <input type="text" id="studyYear" placeholder="e.g. 1st Year">
 
-        <button onclick="logoutUser()">Logout</button>
+                <label for="about">About Me</label>
+                <textarea id="about" placeholder="Write something about yourself..."></textarea>
 
-    </nav>
+                <label for="teachingSkills">Skills I Can Teach</label>
+                <textarea id="teachingSkills" placeholder="e.g. C Programming, HTML, Drawing"></textarea>
 
+                <label for="learningSkills">Skills I Want to Learn</label>
+                <textarea id="learningSkills" placeholder="e.g. Python, JavaScript, Graphic Design"></textarea>
 
-    <!-- MAIN CONTENT -->
-
-    <main class="dashboard">
-
-        <h1>My Student Profile 👤</h1>
-
-        <p>
-            Create your profile and let other students
-            know about your skills.
-        </p>
-
-
-        <!-- PROFILE FORM -->
-
-        <form id="profileForm" class="card">
-
-            <h2>Personal Information</h2>
-
-            <label for="profileName">Full Name</label>
-
-            <input
-                type="text"
-                id="profileName"
-                placeholder="Enter your full name"
-                maxlength="60"
-                required
-            >
-
-
-            <label for="mobileNumber">Mobile Number</label>
-
-            <input
-                type="tel"
-                id="mobileNumber"
-                placeholder="Enter 10-digit mobile number"
-                maxlength="10"
-                pattern="[0-9]{10}"
-            >
-
-
-            <label for="collegeName">College Name</label>
-
-            <input
-                type="text"
-                id="collegeName"
-                placeholder="Enter your college name"
-                maxlength="100"
-            >
-
-
-            <label for="courseName">Course</label>
-
-            <input
-                type="text"
-                id="courseName"
-                placeholder="Example: B.Tech CSE"
-                maxlength="60"
-            >
-
-
-            <label for="studyYear">Study Year</label>
-
-            <select id="studyYear">
-
-                <option value="">Select your year</option>
-                <option value="1st Year">1st Year</option>
-                <option value="2nd Year">2nd Year</option>
-                <option value="3rd Year">3rd Year</option>
-                <option value="4th Year">4th Year</option>
-                <option value="Other">Other</option>
-
-            </select>
-
-
-            <label for="aboutMe">About Me</label>
-
-            <textarea
-                id="aboutMe"
-                placeholder="Tell other students about yourself..."
-                rows="4"
-                maxlength="500"
-            ></textarea>
-
-
-            <h2>Skills Information</h2>
-
-            <label for="teachingSkills">
-                Skills I Can Teach
-            </label>
-
-            <input
-                type="text"
-                id="teachingSkills"
-                placeholder="Example: C, HTML, CSS"
-                maxlength="200"
-            >
-
-
-            <label for="learningSkills">
-                Skills I Want to Learn
-            </label>
-
-            <input
-                type="text"
-                id="learningSkills"
-                placeholder="Example: Java, Python, React"
-                maxlength="200"
-            >
-
-
-            <button type="submit" id="saveProfileButton">
-                Save Profile
-            </button>
-
-        </form>
-
-
-        <!-- PROFILE DETAILS -->
-
-        <section>
-
-            <h2>My Profile Details</h2>
-
-            <div id="profileDisplay" class="cards">
-
-                <p>Your saved profile details will appear here.</p>
-
-            </div>
-
+                <button type="submit" id="saveProfileButton">Save My Profile →</button>
+            </form>
         </section>
 
-    </main>
+        <section class="profile-display">
+            <div class="profile-avatar-large">AR</div>
+            <h2>My Student Profile</h2>
+            <p style="color:#a5b4cf;margin:8px 0 20px">Your community profile preview</p>
+            <div id="profileDisplay">
+                <p>Loading profile...</p>
+            </div>
+        </section>
 
+    </div>
+</main>
 
-    <!-- JAVASCRIPT -->
+<footer>
+    <p>© 2026 SkillSwap | Learn Together. Grow Together.</p>
+</footer>
 
-    <script src="script.js"></script>
-
-    <script
-        type="module"
-        src="profile-firebase.js">
-    </script>
-
+<script src="script.js"></script>
+<script type="module" src="profile-firebase.js"></script>
 </body>
 </html>
