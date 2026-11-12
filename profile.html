@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Manage your SkillSwap student profile and skills.">
+
+    <title>My Profile | SkillSwap</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="top-header">
+
+        <div class="brand">
+            <span class="brand-logo">🔄</span>
+            <h2>SkillSwap</h2>
+        </div>
+
+        <div class="header-actions">
+
+            <button
+                class="profile-button"
+                onclick="window.location.href='profile.html'"
+                aria-label="My Profile"
+            >
+                <span id="headerProfileInitials">AR</span>
+            </button>
+
+            <button
+                class="menu-button"
+                onclick="toggleMenu()"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- NAVIGATION -->
+
+    <nav id="sideMenu" class="side-menu">
+
+        <a href="dashboard.html">Dashboard</a>
+        <a href="profile.html">My Profile</a>
+        <a href="teach.html">Teach a Skill</a>
+        <a href="learn.html">Learn a Skill</a>
+        <a href="students.html">Find Students</a>
+
+        <button onclick="logoutUser()">Logout</button>
+
+    </nav>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="dashboard">
+
+        <h1>My Student Profile 👤</h1>
+
+        <p>
+            Create your profile and let other students
+            know about your skills.
+        </p>
+
+
+        <!-- PROFILE FORM -->
+
+        <form id="profileForm" class="card">
+
+            <h2>Personal Information</h2>
+
+            <label for="profileName">Full Name</label>
+
+            <input
+                type="text"
+                id="profileName"
+                placeholder="Enter your full name"
+                maxlength="60"
+                required
+            >
+
+
+            <label for="mobileNumber">Mobile Number</label>
+
+            <input
+                type="tel"
+                id="mobileNumber"
+                placeholder="Enter 10-digit mobile number"
+                maxlength="10"
+                pattern="[0-9]{10}"
+            >
+
+
+            <label for="collegeName">College Name</label>
+
+            <input
+                type="text"
+                id="collegeName"
+                placeholder="Enter your college name"
+                maxlength="100"
+            >
+
+
+            <label for="courseName">Course</label>
+
+            <input
+                type="text"
+                id="courseName"
+                placeholder="Example: B.Tech CSE"
+                maxlength="60"
+            >
+
+
+            <label for="studyYear">Study Year</label>
+
+            <select id="studyYear">
+
+                <option value="">Select your year</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+                <option value="Other">Other</option>
+
+            </select>
+
+
+            <label for="aboutMe">About Me</label>
+
+            <textarea
+                id="aboutMe"
+                placeholder="Tell other students about yourself..."
+                rows="4"
+                maxlength="500"
+            ></textarea>
+
+
+            <h2>Skills Information</h2>
+
+            <label for="teachingSkills">
+                Skills I Can Teach
+            </label>
+
+            <input
+                type="text"
+                id="teachingSkills"
+                placeholder="Example: C, HTML, CSS"
+                maxlength="200"
+            >
+
+
+            <label for="learningSkills">
+                Skills I Want to Learn
+            </label>
+
+            <input
+                type="text"
+                id="learningSkills"
+                placeholder="Example: Java, Python, React"
+                maxlength="200"
+            >
+
+
+            <button type="submit" id="saveProfileButton">
+                Save Profile
+            </button>
+
+        </form>
+
+
+        <!-- PROFILE DETAILS -->
+
+        <section>
+
+            <h2>My Profile Details</h2>
+
+            <div id="profileDisplay" class="cards">
+
+                <p>Your saved profile details will appear here.</p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="script.js"></script>
+
+    <script
+        type="module"
+        src="profile-firebase.js">
+    </script>
+
+</body>
+</html>

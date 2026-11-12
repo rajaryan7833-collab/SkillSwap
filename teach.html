@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Share your knowledge and teach skills to other students on SkillSwap.">
+
+    <title>Teach a Skill | SkillSwap</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="top-header">
+
+        <div class="brand">
+            <span class="brand-logo">🔄</span>
+            <h2>SkillSwap</h2>
+        </div>
+
+        <div class="header-actions">
+
+            <button
+                class="profile-button"
+                onclick="window.location.href='profile.html'"
+                aria-label="My Profile"
+            >
+                <span id="headerProfileInitials">AR</span>
+            </button>
+
+            <button
+                class="menu-button"
+                onclick="toggleMenu()"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- NAVIGATION -->
+
+    <nav id="sideMenu" class="side-menu">
+
+        <a href="dashboard.html">Dashboard</a>
+        <a href="profile.html">My Profile</a>
+        <a href="teach.html">Teach a Skill</a>
+        <a href="learn.html">Learn a Skill</a>
+        <a href="students.html">Find Students</a>
+
+        <button onclick="logoutUser()">Logout</button>
+
+    </nav>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="dashboard">
+
+        <h1>Share Your Skills 💡</h1>
+
+        <p>
+            Teach what you know and help other students grow.
+        </p>
+
+
+        <!-- TEACH FORM -->
+
+        <form id="teachForm" class="card">
+
+            <h2>Add a Skill</h2>
+
+            <label for="studentName">Your Name</label>
+
+            <input
+                type="text"
+                id="studentName"
+                placeholder="Enter your name"
+                maxlength="60"
+                required
+            >
+
+
+            <label for="skillName">Skill You Can Teach</label>
+
+            <input
+                type="text"
+                id="skillName"
+                placeholder="Example: C Programming"
+                maxlength="80"
+                required
+            >
+
+
+            <label for="skillDescription">Skill Description</label>
+
+            <textarea
+                id="skillDescription"
+                placeholder="Describe what you can teach..."
+                rows="4"
+                maxlength="500"
+                required
+            ></textarea>
+
+
+            <label for="skillLevel">Your Skill Level</label>
+
+            <select id="skillLevel" required>
+
+                <option value="">Select Skill Level</option>
+
+                <option value="Beginner">Beginner</option>
+
+                <option value="Intermediate">Intermediate</option>
+
+                <option value="Advanced">Advanced</option>
+
+            </select>
+
+
+            <button type="submit" id="addSkillButton">
+                Add My Skill
+            </button>
+
+        </form>
+
+
+        <p>
+            <a href="dashboard.html">← Back to Dashboard</a>
+        </p>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="script.js"></script>
+
+    <script
+        type="module"
+        src="teach-firebase.js">
+    </script>
+
+</body>
+</html>

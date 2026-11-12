@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Explore skills shared by students and choose what you want to learn on SkillSwap.">
+
+    <title>Learn Skills | SkillSwap</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="top-header">
+
+        <div class="brand">
+            <span class="brand-logo">🔄</span>
+            <h2>SkillSwap</h2>
+        </div>
+
+        <div class="header-actions">
+
+            <button
+                class="profile-button"
+                onclick="window.location.href='profile.html'"
+                aria-label="My Profile"
+            >
+                <span id="headerProfileInitials">AR</span>
+            </button>
+
+            <button
+                class="menu-button"
+                onclick="toggleMenu()"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- NAVIGATION -->
+
+    <nav id="sideMenu" class="side-menu">
+
+        <a href="dashboard.html">Dashboard</a>
+        <a href="profile.html">My Profile</a>
+        <a href="teach.html">Teach a Skill</a>
+        <a href="learn.html">Learn a Skill</a>
+        <a href="students.html">Find Students</a>
+
+        <button onclick="logoutUser()">Logout</button>
+
+    </nav>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="dashboard">
+
+        <h1>Explore Skills 📚</h1>
+
+        <p>
+            Discover what other students can teach
+            and choose something new to learn.
+        </p>
+
+
+        <!-- AVAILABLE SKILLS -->
+
+        <section>
+
+            <h2>Available Skills</h2>
+
+            <div class="cards" id="learnSkills">
+
+                <p>Loading available skills...</p>
+
+            </div>
+
+        </section>
+
+
+        <!-- SELECTED SKILLS -->
+
+        <section>
+
+            <h2>My Selected Skills ⭐</h2>
+
+            <p>
+                Skills you have selected to learn will appear here.
+            </p>
+
+            <div class="cards" id="selectedSkills">
+
+                <p>Loading your selected skills...</p>
+
+            </div>
+
+        </section>
+
+
+        <p>
+            <a href="dashboard.html">← Back to Dashboard</a>
+        </p>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="script.js"></script>
+
+    <script
+        type="module"
+        src="learn-firebase.js">
+    </script>
+
+</body>
+</html>

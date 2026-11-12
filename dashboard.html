@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="SkillSwap - Learn together, grow together.">
+
+    <title>SkillSwap | Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="top-header">
+
+        <div class="brand">
+            <span class="brand-logo">🔄</span>
+            <h2>SkillSwap</h2>
+        </div>
+
+        <div class="header-actions">
+
+            <!-- Notification Bell -->
+            <button
+                type="button"
+                id="notificationButton"
+                class="notification-button"
+                onclick="toggleNotifications()"
+                aria-label="Notifications"
+            >
+                🔔
+                <span id="notificationCount" class="notification-count" hidden>0</span>
+            </button>
+
+            <!-- Profile -->
+            <button
+                class="profile-button"
+                type="button"
+                onclick="window.location.href='profile.html'"
+                aria-label="Open my profile"
+            >
+                <span id="headerProfileInitials">AR</span>
+            </button>
+
+            <!-- Menu -->
+            <button
+                class="menu-button"
+                type="button"
+                onclick="toggleMenu()"
+                aria-label="Toggle navigation menu"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- Notification Panel -->
+    <section
+        id="notificationsPanel"
+        class="notifications-panel"
+        hidden
+    >
+        <div class="notifications-heading">
+            <h3>Notifications</h3>
+            <button
+                type="button"
+                onclick="toggleNotifications()"
+                aria-label="Close notifications"
+            >
+                ✕
+            </button>
+        </div>
+
+        <div id="notificationsList" aria-live="polite">
+            No notifications yet.
+        </div>
+    </section>
+
+    <!-- Navigation -->
+    <nav id="sideMenu" class="side-menu">
+
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="profile.html">👤 My Profile</a>
+        <a href="teach.html">💻 Teach a Skill</a>
+        <a href="learn.html">📚 Learn a Skill</a>
+        <a href="students.html">🤝 Find Students</a>
+
+        <button type="button" onclick="logoutUser()">
+            Logout
+        </button>
+
+    </nav>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard">
+
+        <section class="dashboard-welcome">
+
+            <h1 id="welcomeHeading">Welcome! 👋</h1>
+
+            <p>
+                Ready to learn something new today?
+                Share your knowledge and grow together.
+            </p>
+
+        </section>
+
+        <section class="dashboard-section">
+
+            <h2>Explore SkillSwap</h2>
+
+            <p>Choose what you want to do today.</p>
+
+            <div class="cards">
+
+                <div class="card">
+                    <h3>💻 Teach a Skill</h3>
+                    <p>Share your knowledge and help other students learn.</p>
+                    <button type="button" onclick="window.location.href='teach.html'">
+                        Add Skill
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Learn a Skill</h3>
+                    <p>Discover new skills and learn from other students.</p>
+                    <button type="button" onclick="window.location.href='learn.html'">
+                        Explore Skills
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3>🤝 Find Students</h3>
+                    <p>Connect with students who can teach or learn from you.</p>
+                    <button type="button" onclick="window.location.href='students.html'">
+                        Find Students
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3>👤 My Profile</h3>
+                    <p>Update your information and manage your skills.</p>
+                    <button type="button" onclick="window.location.href='profile.html'">
+                        View Profile
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="dashboard-about">
+            <h2>Learn Together. Grow Together.</h2>
+            <p>
+                SkillSwap is a student skill-exchange platform
+                where students connect, share knowledge and learn
+                new skills from each other.
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script type="module" src="dashboard-firebase.js"></script>
+
+</body>
+</html>

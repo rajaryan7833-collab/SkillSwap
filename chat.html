@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSwap | Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="chat-container">
+
+        <header class="chat-header">
+            <button type="button" onclick="history.back()">← Back</button>
+
+            <div>
+                <h2 id="chatStudentName">Student</h2>
+                <p>SkillSwap Chat</p>
+            </div>
+        </header>
+
+        <div
+            id="messagesBox"
+            class="messages-box"
+            aria-live="polite"
+            aria-label="Chat messages"
+        >
+            Loading messages...
+        </div>
+
+        <form id="messageForm" class="message-form">
+            <input
+                type="text"
+                id="messageInput"
+                placeholder="Type your message..."
+                maxlength="2000"
+                autocomplete="off"
+                required
+            >
+
+            <button type="submit">Send</button>
+        </form>
+
+    </div>
+
+    <script type="module" src="chat-firebase.js"></script>
+
+</body>
+</html>

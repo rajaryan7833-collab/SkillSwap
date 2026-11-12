@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Login or create your SkillSwap student account.">
+
+    <title>Login | SkillSwap</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <h1>SkillSwap.</h1>
+
+        <p>Learn Together. Grow Together.</p>
+
+
+        <!-- LOGIN FORM -->
+
+        <form id="loginForm">
+
+            <h2>Welcome Back 👋</h2>
+
+            <p>Login to continue your learning journey.</p>
+
+            <input
+                type="email"
+                id="loginEmail"
+                placeholder="Enter your email"
+                autocomplete="email"
+                required
+            >
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+            <button type="submit">Login</button>
+
+            <p>
+                Don't have an account?
+            </p>
+
+            <button
+                type="button"
+                onclick="showRegister()"
+            >
+                Create Account
+            </button>
+
+        </form>
+
+
+        <!-- REGISTER FORM -->
+
+        <form id="registerForm" style="display: none;">
+
+            <h2>Create Your Account 🚀</h2>
+
+            <p>Join SkillSwap and start exchanging skills.</p>
+
+            <input
+                type="text"
+                id="registerName"
+                placeholder="Enter your full name"
+                autocomplete="name"
+                required
+            >
+
+            <input
+                type="email"
+                id="registerEmail"
+                placeholder="Enter your email"
+                autocomplete="email"
+                required
+            >
+
+            <input
+                type="password"
+                id="registerPassword"
+                placeholder="Create password (minimum 6 characters)"
+                minlength="6"
+                autocomplete="new-password"
+                required
+            >
+
+            <button type="submit">
+                Create Account
+            </button>
+
+            <p>Already have an account?</p>
+
+            <button
+                type="button"
+                onclick="showLogin()"
+            >
+                Back to Login
+            </button>
+
+        </form>
+
+
+        <p>
+            <a href="index.html">← Back to Home</a>
+        </p>
+
+        <footer>
+            <p>SkillSwap © 2026</p>
+        </footer>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="script.js"></script>
+
+    <script
+        type="module"
+        src="firebase-auth.js">
+    </script>
+
+</body>
+</html>
