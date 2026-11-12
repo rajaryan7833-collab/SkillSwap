@@ -1275,3 +1275,37 @@ footer {
         max-width: 100%;
     }
 }
+/* SKILLSWAP - SIDE BY SIDE LEARNING CARDS */
+
+#notesList,
+#tutorialList,
+#practiceList,
+#practicalList,
+#sharedMaterials {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
+
+#notesList .card,
+#tutorialList .card,
+#practiceList .card,
+#practicalList .card,
+#sharedMaterials .card {
+    width: 100%;
+    margin: 0;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Mobile responsive */
+@media (max-width: 550px) {
+    #notesList,
+    #tutorialList,
+    #practiceList,
+    #practicalList,
+    #sharedMaterials {
+        grid-template-columns: 1fr;
+    }
+}
