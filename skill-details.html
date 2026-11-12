@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1020">
+    <title>SkillSwap | Learning Center</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="dashboard">
+
+        <header class="top-header">
+            <div class="brand">
+                <span class="brand-logo">🔄</span>
+                <h2>SkillSwap</h2>
+            </div>
+            <button type="button" onclick="history.back()">← Back</button>
+        </header>
+
+        <section class="dashboard-welcome">
+            <h1 id="skillTitle">Loading Skill...</h1>
+            <p id="skillDescription">Your learning journey starts here.</p>
+            <p id="skillLevel"></p>
+        </section>
+
+        <section class="dashboard-section">
+            <h2>Learning Center</h2>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>📖 Study Notes</h3>
+                    <button onclick="showLearningSection('notes')">Open Notes</button>
+                </div>
+
+                <div class="card">
+                    <h3>🎥 Tutorials</h3>
+                    <button onclick="showLearningSection('tutorials')">Open Tutorials</button>
+                </div>
+
+                <div class="card">
+                    <h3>✍️ Practice</h3>
+                    <button onclick="showLearningSection('practice')">Practice Questions</button>
+                </div>
+
+                <div class="card">
+                    <h3>💻 Practicals</h3>
+                    <button onclick="showLearningSection('practicals')">Open Practicals</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="notes" class="learning-section">
+            <h2>Study Notes</h2>
+            <div id="notesList">Loading notes...</div>
+        </section>
+
+        <section id="tutorials" class="learning-section" hidden>
+            <h2>Tutorials</h2>
+            <div id="tutorialList">Loading tutorials...</div>
+        </section>
+
+        <section id="practice" class="learning-section" hidden>
+            <h2>Practice Questions</h2>
+            <div id="practiceList">Loading questions...</div>
+        </section>
+
+        <section id="practicals" class="learning-section" hidden>
+            <h2>Practical Programs</h2>
+            <div id="practicalList">Loading practicals...</div>
+        </section>
+
+        <section class="dashboard-section">
+            <h2>Shared Study Materials</h2>
+            <div id="sharedMaterials">Loading materials...</div>
+        </section>
+
+    </main>
+
+    <script>
+        function showLearningSection(sectionId) {
+            document.querySelectorAll(".learning-section").forEach(function(section) {
+                section.hidden = section.id !== sectionId;
+            });
+        }
+    </script>
+
+    <script type="module" src="skill-details.js"></script>
+</body>
+</html>

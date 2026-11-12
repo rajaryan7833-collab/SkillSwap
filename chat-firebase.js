@@ -34,8 +34,18 @@ function showError(message) {
     messageForm.style.display = "none";
 }
 
-onAuthStateChanged(auth, async function(user) {
+function formatTime(timestamp) {
+    if (!timestamp || typeof timestamp.toDate !== "function") {
+        return "Just now";
+    }
 
+    return timestamp.toDate().toLocaleString([], {
+        dateStyle: "short",
+        timeStyle: "short"
+    });
+}
+
+onAuthStateChanged(auth, async function(user) {
     if (!user) {
         window.location.href = "login.html";
         return;
@@ -44,7 +54,7 @@ onAuthStateChanged(auth, async function(user) {
     currentUser = user;
 
     if (!chatId) {
-        showError("Chat ID missing.");
+        showError("Chat ID missing. Please open chat from Students page.");
         return;
     }
 
@@ -61,14 +71,15 @@ onAuthStateChanged(auth, async function(user) {
 
         if (
             !Array.isArray(chat.participants) ||
-            !chat.participants.includes(currentUser.uid)
+            !chat.participants.includes(user.uid)
         ) {
             showError("You are not allowed to access this chat.");
             return;
         }
 
-        const requestRef = doc(db, "connectionRequests", chatId);
-        const requestSnapshot = await getDoc(requestRef);
+        const requestSnapshot = await getDoc(
+            doc(db, "connectionRequests", chatId)
+        );
 
         if (!requestSnapshot.exists()) {
             showError("Connection request not found.");
@@ -77,12 +88,15 @@ onAuthStateChanged(auth, async function(user) {
 
         const request = requestSnapshot.data();
 
-        if (request.status !== "Accepted") {
-            showError("Connection request is not accepted.");
+        if (
+            request.status !== "Accepted" ||
+            ![request.senderUid, request.recipientUid].includes(user.uid)
+        ) {
+            showError("This connection is not accepted.");
             return;
         }
 
-        if (currentUser.uid === request.senderUid) {
+        if (user.uid === request.senderUid) {
             otherStudentUid = request.recipientUid;
             otherStudentName = request.recipientName || "Student";
         } else {
@@ -96,12 +110,11 @@ onAuthStateChanged(auth, async function(user) {
 
     } catch (error) {
         console.error("Chat loading error:", error);
-        showError("Chat loading failed: " + error.message);
+        showError("Unable to load chat. Please try again.");
     }
 });
 
 function loadMessages() {
-
     const messagesRef = collection(db, "chats", chatId, "messages");
 
     const messagesQuery = query(
@@ -109,50 +122,53 @@ function loadMessages() {
         orderBy("createdAt", "asc")
     );
 
-    stopMessagesListener = onSnapshot(messagesQuery, function(snapshot) {
+    stopMessagesListener = onSnapshot(
+        messagesQuery,
+        function(snapshot) {
+            messagesBox.innerHTML = "";
 
-        messagesBox.innerHTML = "";
+            if (snapshot.empty) {
+                messagesBox.textContent = "No messages yet. Say hello!";
+                return;
+            }
 
-        if (snapshot.empty) {
-            messagesBox.textContent = "No messages yet. Say hello!";
-            return;
+            snapshot.forEach(function(item) {
+                const message = item.data();
+
+                const messageCard = document.createElement("div");
+
+                messageCard.className =
+                    message.senderUid === currentUser.uid
+                        ? "my-message"
+                        : "other-message";
+
+                const sender = document.createElement("strong");
+                sender.textContent =
+                    message.senderUid === currentUser.uid
+                        ? "You"
+                        : otherStudentName;
+
+                const text = document.createElement("p");
+                text.textContent = message.text || "";
+
+                const time = document.createElement("small");
+                time.className = "message-time";
+                time.textContent = formatTime(message.createdAt);
+
+                messageCard.append(sender, text, time);
+                messagesBox.appendChild(messageCard);
+            });
+
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+        },
+        function(error) {
+            console.error("Message listener error:", error);
+            messagesBox.textContent = "Unable to load messages. Please refresh.";
         }
-
-        snapshot.forEach(function(item) {
-
-            const message = item.data();
-
-            const messageCard = document.createElement("div");
-
-            messageCard.className =
-                message.senderUid === currentUser.uid
-                    ? "my-message"
-                    : "other-message";
-
-            const sender = document.createElement("strong");
-
-            sender.textContent =
-                message.senderUid === currentUser.uid
-                    ? "You"
-                    : otherStudentName;
-
-            const text = document.createElement("p");
-            text.textContent = message.text || "";
-
-            messageCard.append(sender, text);
-            messagesBox.appendChild(messageCard);
-        });
-
-        messagesBox.scrollTop = messagesBox.scrollHeight;
-
-    }, function(error) {
-        console.error("Message loading error:", error);
-        messagesBox.textContent = "Unable to load messages: " + error.message;
-    });
+    );
 }
 
 messageForm.addEventListener("submit", async function(event) {
-
     event.preventDefault();
 
     const message = messageInput.value.trim();
@@ -171,8 +187,6 @@ messageForm.addEventListener("submit", async function(event) {
     sendButton.textContent = "Sending...";
 
     try {
-
-        // Save chat message
         await addDoc(
             collection(db, "chats", chatId, "messages"),
             {
@@ -184,7 +198,6 @@ messageForm.addEventListener("submit", async function(event) {
 
         messageInput.value = "";
 
-        // Update latest chat message
         try {
             await updateDoc(doc(db, "chats", chatId), {
                 lastMessage: message,
@@ -194,7 +207,6 @@ messageForm.addEventListener("submit", async function(event) {
             console.error("Chat preview update error:", error);
         }
 
-        // Create notification for the other student
         try {
             await addDoc(collection(db, "notifications"), {
                 senderUid: currentUser.uid,
@@ -205,15 +217,14 @@ messageForm.addEventListener("submit", async function(event) {
                 createdAt: serverTimestamp(),
                 read: false
             });
-
-        } catch (notificationError) {
-            console.error("Notification creation error:", notificationError);
-            alert("Message sent, but notification could not be created. Please check Firestore rules.");
+        } catch (error) {
+            console.error("Notification creation error:", error);
+            alert("Message sent, but notification could not be created.");
         }
 
     } catch (error) {
         console.error("Message sending error:", error);
-        alert("Message failed: " + error.message);
+        alert("Message failed. Please check your internet and try again.");
     }
 
     messageInput.disabled = false;

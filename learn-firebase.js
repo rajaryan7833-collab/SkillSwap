@@ -23,27 +23,70 @@ let allSkills = [];
 let selectedSkillIds = [];
 
 
+// GET SKILL NAME
+function getSkillTitle(data) {
+    const title =
+        data.skill ||
+        data.skillName ||
+        data.title ||
+        "";
+
+    return typeof title === "string" ? title.trim() : "";
+}
+
+
+// GET TEACHER NAME
+function getTeacherName(skill) {
+    return (
+        skill.name ||
+        skill.teacherName ||
+        skill.displayName ||
+        "Student"
+    );
+}
+
+
 // CREATE SKILL CARD
-function createSkillCard(skill, skillId, isSelected) {
+function createSkillCard(skill) {
 
     const card = document.createElement("div");
     card.className = "card";
 
     const heading = document.createElement("h3");
-    heading.textContent = skill.skill || "Untitled Skill";
+    heading.textContent = getSkillTitle(skill);
 
     const name = document.createElement("p");
-    name.textContent = "By: " + (skill.name || "Student");
+
+    if (skill.uid === currentUser.uid) {
+        name.textContent = "You are teaching this skill";
+
+    } else if (skill.uid === "system") {
+        name.textContent = "Teacher not assigned yet";
+
+    } else {
+        name.textContent = "By: " + getTeacherName(skill);
+    }
 
     const description = document.createElement("p");
-    description.textContent = skill.description || "No description available.";
+    description.textContent =
+        skill.description || "No description available.";
 
     const level = document.createElement("p");
-    level.textContent = "Level: " + (skill.level || "Not specified");
+    level.textContent =
+        "Level: " + (skill.level || "Not specified");
 
     card.append(heading, name, description, level);
 
     return card;
+}
+
+
+// OPEN LEARNING PAGE
+function openLearningPage(skillId) {
+
+    window.location.href =
+        "skill-details.html?skillId=" +
+        encodeURIComponent(skillId);
 }
 
 
@@ -62,8 +105,7 @@ function displayAvailableSkills() {
         const skill = item.data;
         const skillId = item.id;
 
-        const card = createSkillCard(skill, skillId, false);
-
+        const card = createSkillCard(skill);
         const button = document.createElement("button");
 
         if (skill.uid === currentUser.uid) {
@@ -83,14 +125,12 @@ function displayAvailableSkills() {
             button.addEventListener("click", function() {
                 selectSkill(skillId, button);
             });
-
         }
 
         card.appendChild(button);
         learnSkills.appendChild(card);
 
     });
-
 }
 
 
@@ -104,28 +144,35 @@ function displaySelectedSkills() {
     });
 
     if (mySelectedSkills.length === 0) {
-        selectedSkills.textContent = "You haven't selected any skills yet.";
+
+        selectedSkills.textContent =
+            "You haven't selected any skills yet.";
+
         return;
     }
 
     mySelectedSkills.forEach(function(item) {
 
-        const card = createSkillCard(item.data, item.id, true);
+        const card = createSkillCard(item.data);
+
+        const openButton = document.createElement("button");
+        openButton.textContent = "Open Learning";
+
+        openButton.addEventListener("click", function() {
+            openLearningPage(item.id);
+        });
 
         const removeButton = document.createElement("button");
-
         removeButton.textContent = "Remove";
 
         removeButton.addEventListener("click", function() {
             removeSkill(item.id, removeButton);
         });
 
-        card.appendChild(removeButton);
-
+        card.append(openButton, removeButton);
         selectedSkills.appendChild(card);
 
     });
-
 }
 
 
@@ -139,7 +186,11 @@ async function selectSkill(skillId, button) {
 
     try {
 
-        const profileRef = doc(db, "studentProfiles", currentUser.uid);
+        const profileRef = doc(
+            db,
+            "studentProfiles",
+            currentUser.uid
+        );
 
         await setDoc(profileRef, {
             selectedSkillIds: arrayUnion(skillId)
@@ -147,7 +198,9 @@ async function selectSkill(skillId, button) {
             merge: true
         });
 
-        selectedSkillIds.push(skillId);
+        if (!selectedSkillIds.includes(skillId)) {
+            selectedSkillIds.push(skillId);
+        }
 
         displayAvailableSkills();
         displaySelectedSkills();
@@ -160,13 +213,11 @@ async function selectSkill(skillId, button) {
 
         button.disabled = false;
         button.textContent = "Select to Learn";
-
     }
-
 }
 
 
-// REMOVE A SELECTED SKILL
+// REMOVE SELECTED SKILL
 async function removeSkill(skillId, button) {
 
     if (!currentUser) return;
@@ -176,7 +227,11 @@ async function removeSkill(skillId, button) {
 
     try {
 
-        const profileRef = doc(db, "studentProfiles", currentUser.uid);
+        const profileRef = doc(
+            db,
+            "studentProfiles",
+            currentUser.uid
+        );
 
         await setDoc(profileRef, {
             selectedSkillIds: arrayRemove(skillId)
@@ -199,13 +254,11 @@ async function removeSkill(skillId, button) {
 
         button.disabled = false;
         button.textContent = "Remove";
-
     }
-
 }
 
 
-// LOAD SKILLS AND STUDENT SELECTIONS
+// LOAD SKILLS
 async function loadSkills() {
 
     learnSkills.textContent = "Loading available skills...";
@@ -213,34 +266,56 @@ async function loadSkills() {
 
     try {
 
-        const profileRef = doc(db, "studentProfiles", currentUser.uid);
+        const profileRef = doc(
+            db,
+            "studentProfiles",
+            currentUser.uid
+        );
 
         const profileSnapshot = await getDoc(profileRef);
 
         if (profileSnapshot.exists()) {
 
-            selectedSkillIds =
-                profileSnapshot.data().selectedSkillIds || [];
+            const profileData = profileSnapshot.data();
+
+            selectedSkillIds = Array.isArray(
+                profileData.selectedSkillIds
+            ) ? profileData.selectedSkillIds : [];
 
         } else {
 
             selectedSkillIds = [];
-
         }
 
 
-        const skillsSnapshot = await getDocs(collection(db, "skills"));
+        const skillsSnapshot = await getDocs(
+            collection(db, "skills")
+        );
 
         allSkills = [];
 
         skillsSnapshot.forEach(function(skillDocument) {
 
+            const data = skillDocument.data();
+            const title = getSkillTitle(data);
+
+            if (!title) {
+                console.warn(
+                    "Skipped incomplete skill:",
+                    skillDocument.id
+                );
+                return;
+            }
+
+            data.skill = title;
+
             allSkills.push({
                 id: skillDocument.id,
-                data: skillDocument.data()
+                data: data
             });
 
         });
+
 
         displayAvailableSkills();
         displaySelectedSkills();
@@ -249,12 +324,12 @@ async function loadSkills() {
 
         console.error("Skills loading error:", error);
 
-        learnSkills.textContent = "Unable to load skills: " + error.message;
+        learnSkills.textContent =
+            "Unable to load skills: " + error.message;
 
-        selectedSkills.textContent = "Unable to load selected skills.";
-
+        selectedSkills.textContent =
+            "Unable to load selected skills.";
     }
-
 }
 
 
@@ -262,10 +337,8 @@ async function loadSkills() {
 onAuthStateChanged(auth, async function(user) {
 
     if (!user) {
-
         window.location.href = "login.html";
         return;
-
     }
 
     currentUser = user;
