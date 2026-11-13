@@ -16,12 +16,70 @@ import {
 const welcomeHeading = document.getElementById("welcomeHeading");
 const headerProfileInitials = document.getElementById("headerProfileInitials");
 
-const notificationButton = document.getElementById("notificationButton");
 const notificationCount = document.getElementById("notificationCount");
 const notificationsPanel = document.getElementById("notificationsPanel");
 const notificationsList = document.getElementById("notificationsList");
 
 let stopNotificationsListener = null;
+let firstSnapshotLoaded = false;
+
+// Sound setup
+let audioContext = null;
+let soundEnabled = false;
+
+// Browser sound unlock: user must interact once
+function enableNotificationSound() {
+    const AudioContextClass =
+        window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) return;
+
+    if (!audioContext) {
+        audioContext = new AudioContextClass();
+    }
+
+    if (audioContext.state === "suspended") {
+        audioContext.resume();
+    }
+
+    soundEnabled = true;
+}
+
+document.addEventListener("click", enableNotificationSound);
+document.addEventListener("touchstart", enableNotificationSound);
+document.addEventListener("keydown", enableNotificationSound);
+
+// Bell sound
+function playNotificationSound() {
+    if (!soundEnabled || !audioContext) return;
+
+    if (audioContext.state === "suspended") {
+        audioContext.resume();
+    }
+
+    const now = audioContext.currentTime;
+
+    function makeBellTone(frequency, startTime) {
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(frequency, startTime);
+
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.18, startTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.65);
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.start(startTime);
+        oscillator.stop(startTime + 0.7);
+    }
+
+    makeBellTone(880, now);
+    makeBellTone(1175, now + 0.18);
+}
 
 // Toggle notification panel
 window.toggleNotifications = function() {
@@ -47,9 +105,7 @@ onAuthStateChanged(auth, function(user) {
             "Welcome, " + studentName + "! 👋";
     }
 
-    // Profile initials
     if (headerProfileInitials) {
-
         const initials = studentName
             .trim()
             .split(/\s+/)
@@ -63,9 +119,7 @@ onAuthStateChanged(auth, function(user) {
         headerProfileInitials.textContent = initials || "S";
     }
 
-    // Start notification listener
     loadNotifications(user);
-
 });
 
 // Listen for real-time notifications
@@ -74,6 +128,8 @@ function loadNotifications(user) {
     if (stopNotificationsListener) {
         stopNotificationsListener();
     }
+
+    firstSnapshotLoaded = false;
 
     const notificationsQuery = query(
         collection(db, "notifications"),
@@ -84,6 +140,17 @@ function loadNotifications(user) {
         notificationsQuery,
         function(snapshot) {
 
+            // Play sound only for notifications added after initial load
+            if (firstSnapshotLoaded) {
+                snapshot.docChanges().forEach(function(change) {
+                    if (change.type === "added") {
+                        playNotificationSound();
+                    }
+                });
+            }
+
+            firstSnapshotLoaded = true;
+
             const notifications = [];
 
             snapshot.forEach(function(item) {
@@ -93,7 +160,6 @@ function loadNotifications(user) {
                 });
             });
 
-            // Latest notification first
             notifications.sort(function(a, b) {
                 const timeA = a.createdAt?.toMillis?.() || 0;
                 const timeB = b.createdAt?.toMillis?.() || 0;
@@ -105,7 +171,6 @@ function loadNotifications(user) {
                 return item.read === false;
             }).length;
 
-            // Update unread count
             if (notificationCount) {
                 notificationCount.textContent =
                     unreadCount > 99 ? "99+" : unreadCount;
@@ -149,24 +214,19 @@ function displayNotifications(notifications) {
         }
 
         const heading = document.createElement("strong");
-
-        heading.textContent =
-            notification.senderName || "Student";
+        heading.textContent = notification.senderName || "Student";
 
         const message = document.createElement("p");
-
         message.textContent =
             notification.message || "Sent you a message.";
 
         const status = document.createElement("small");
-
         status.textContent =
             notification.read === false
                 ? "New message · Unread"
                 : "Read";
 
         const openButton = document.createElement("button");
-
         openButton.type = "button";
         openButton.textContent = "Open Chat";
 
@@ -176,7 +236,6 @@ function displayNotifications(notifications) {
             openButton.textContent = "Opening...";
 
             try {
-
                 if (notification.read === false) {
                     await updateDoc(
                         doc(db, "notifications", notification.id),
@@ -189,7 +248,6 @@ function displayNotifications(notifications) {
                     encodeURIComponent(notification.chatId);
 
             } catch (error) {
-
                 console.error("Notification update error:", error);
 
                 alert("Unable to open notification: " + error.message);
@@ -197,11 +255,9 @@ function displayNotifications(notifications) {
                 openButton.disabled = false;
                 openButton.textContent = "Open Chat";
             }
-
         });
 
         card.append(heading, message, status, openButton);
-
         notificationsList.appendChild(card);
     });
 }

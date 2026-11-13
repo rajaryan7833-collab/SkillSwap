@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#080b18">
-    <title>SkillSwap | Welcome</title>
+    <title>SkillSwap | Login</title>
+
     <link rel="stylesheet" href="style.css">
 
     <style>
         .auth-wrapper {
-            min-height: 90vh;
+            min-height: 85vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -18,102 +19,87 @@
 
         .auth-box {
             width: 100%;
-            max-width: 460px;
-            padding: 35px;
-            background: linear-gradient(145deg,#171e36,#101629);
-            border: 1px solid rgba(167,139,250,.3);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,.35);
+            max-width: 450px;
+            padding: 30px;
+            background: #151e32;
+            border: 1px solid #6554a4;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px #0008;
         }
 
-        .auth-logo {
+        .auth-box h1,
+        .auth-box h2 {
             text-align: center;
-            font-size: 42px;
         }
 
         .auth-box h1 {
-            text-align: center;
-            font-size: 30px;
-            margin: 10px 0;
+            font-size: 27px;
         }
 
-        .auth-subtitle {
+        .auth-box p {
             text-align: center;
-            color: #a5b4cf;
-            margin-bottom: 25px;
+            color: #cbd5e1;
         }
 
         .auth-box form {
             display: flex;
             flex-direction: column;
-            gap: 13px;
+            gap: 12px;
+        }
+
+        .auth-box form[hidden] {
+            display: none !important;
         }
 
         .auth-box label {
-            color: #dbeafe;
-            font-size: 14px;
+            color: white;
         }
 
         .auth-box input {
             width: 100%;
-        }
-
-        .auth-box form button {
             padding: 13px;
-            margin-top: 8px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background: #0b1020;
+            color: white;
         }
 
-        .auth-switch {
-            text-align: center;
-            margin-top: 20px;
-            color: #cbd5e1;
-        }
-
-        .auth-switch button {
-            background: none;
-            color: #c4b5fd;
+        .auth-box button {
+            padding: 13px;
+            border-radius: 9px;
             border: none;
+            cursor: pointer;
             font-weight: bold;
+            font-size: 15px;
         }
 
-        .google-login-btn {
+        .primary-btn {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .google-btn {
             width: 100%;
-            padding: 13px;
-            background: white !important;
-            color: #202124 !important;
-            border: 1px solid #ddd !important;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
+            background: white;
+            color: #222;
+            margin-top: 15px;
         }
 
-        .google-login-btn span {
-            color: #4285f4;
-            font-size: 20px;
-            font-weight: 900;
+        .switch-btn {
+            background: transparent;
+            color: #c4b5fd;
+            padding: 5px !important;
         }
 
-        .auth-divider {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .switch-text {
+            margin-top: 20px;
+        }
+
+        .divider {
+            text-align: center;
             color: #94a3b8;
-            margin: 20px 0;
-            font-size: 13px;
-        }
-
-        .auth-divider::before,
-        .auth-divider::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: #303b5a;
-        }
-
-        @media(max-width:480px) {
-            .auth-box { padding: 25px 19px; }
+            margin: 20px 0 5px;
         }
     </style>
 </head>
@@ -129,63 +115,72 @@
 </header>
 
 <main class="auth-wrapper">
-
     <section class="auth-box">
 
-        <div class="auth-logo">♾️</div>
-        <h1>Welcome to SkillSwap</h1>
-        <p class="auth-subtitle">Learn Together. Grow Together.</p>
+        <h1>♾️ SkillSwap</h1>
+        <p>Learn Together. Grow Together.</p>
 
+        <!-- LOGIN FORM -->
         <form id="loginForm">
             <h2>Sign In</h2>
 
             <label for="loginEmail">Email Address</label>
             <input type="email" id="loginEmail"
-                placeholder="Enter your email" autocomplete="email" required>
+                   placeholder="Enter your email" required>
 
             <label for="loginPassword">Password</label>
             <input type="password" id="loginPassword"
-                placeholder="Enter your password"
-                autocomplete="current-password" required>
+                   placeholder="Enter your password" required>
 
-            <button type="submit">Login to Account →</button>
+            <button type="submit" class="primary-btn">
+                Login to Account →
+            </button>
         </form>
 
-        <div class="auth-divider">OR</div>
+        <div id="loginExtras">
+            <div class="divider">OR</div>
 
-        <button type="button" id="googleLoginButton"
-            class="google-login-btn">
-            <span>G</span> Continue with Google
-        </button>
+            <button type="button" id="googleLoginButton"
+                    class="google-btn">
+                Continue with Google
+            </button>
 
-        <p class="auth-switch" id="loginSwitch">
-            Don't have an account?
-            <button type="button" onclick="showRegister()">Create Account</button>
-        </p>
+            <p class="switch-text">
+                Don't have an account?
+                <button type="button" id="openRegister"
+                        class="switch-btn">
+                    Create Account
+                </button>
+            </p>
+        </div>
 
+        <!-- REGISTER FORM -->
         <form id="registerForm" hidden>
             <h2>Create Your Account</h2>
 
             <label for="registerName">Full Name</label>
             <input type="text" id="registerName"
-                placeholder="Enter your full name"
-                autocomplete="name" required>
+                   placeholder="Enter your full name" required>
 
             <label for="registerEmail">Email Address</label>
             <input type="email" id="registerEmail"
-                placeholder="Enter your email"
-                autocomplete="email" required>
+                   placeholder="Enter your email" required>
 
             <label for="registerPassword">Create Password</label>
             <input type="password" id="registerPassword"
-                placeholder="Minimum 6 characters"
-                minlength="6" autocomplete="new-password" required>
+                   placeholder="Minimum 6 characters"
+                   minlength="6" required>
 
-            <button type="submit">Create Account →</button>
+            <button type="submit" class="primary-btn">
+                Create Account →
+            </button>
 
-            <p class="auth-switch">
+            <p class="switch-text">
                 Already have an account?
-                <button type="button" onclick="showLogin()">Sign In</button>
+                <button type="button" id="openLogin"
+                        class="switch-btn">
+                    Sign In
+                </button>
             </p>
         </form>
 
@@ -196,8 +191,25 @@
     <p>© 2026 SkillSwap | Learn Together. Grow Together.</p>
 </footer>
 
-<script src="script.js"></script>
-<script type="module" src="firebase-auth.js"></script>
+<script>
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const loginExtras = document.getElementById("loginExtras");
+
+    document.getElementById("openRegister").addEventListener("click", function() {
+        loginForm.hidden = true;
+        loginExtras.hidden = true;
+        registerForm.hidden = false;
+    });
+
+    document.getElementById("openLogin").addEventListener("click", function() {
+        registerForm.hidden = true;
+        loginForm.hidden = false;
+        loginExtras.hidden = false;
+    });
+</script>
+
+<script type="module" src="./firebase-auth.js"></script>
 
 </body>
 </html>

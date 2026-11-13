@@ -20,10 +20,12 @@
             onclick="toggleNotifications()" aria-label="Notifications">
             🔔 <span id="notificationCount">0</span>
         </button>
+
         <button class="profile-button" type="button"
             onclick="window.location.href='profile.html'">
-            <span>AR</span>
+            <span id="headerProfileInitials">S</span>
         </button>
+
         <button type="button" onclick="toggleMenu()">☰</button>
     </div>
 </header>
@@ -45,10 +47,19 @@
 <main class="dashboard">
 
     <section class="dashboard-welcome">
-        <p style="color:#c4b5fd;font-weight:700">WELCOME TO YOUR LEARNING SPACE</p>
+        <p style="color:#c4b5fd;font-weight:700">
+            WELCOME TO YOUR LEARNING SPACE
+        </p>
+
         <h1 id="welcomeHeading">Welcome to SkillSwap!</h1>
-        <p>Learn new skills, share your knowledge and grow with your student community.</p>
-        <button onclick="window.location.href='learn.html'">Explore Skills →</button>
+
+        <p>
+            Learn new skills, share your knowledge and grow with your student community.
+        </p>
+
+        <button onclick="window.location.href='learn.html'">
+            Explore Skills →
+        </button>
     </section>
 
     <section class="dashboard-section">
@@ -107,6 +118,77 @@
 </footer>
 
 <script src="script.js"></script>
+
+<script type="module">
+    import { auth, db } from "./firebase.js";
+
+    import {
+        onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+    import {
+        doc,
+        getDoc
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        let studentName = user.displayName || "";
+
+        try {
+            const profileRef = doc(db, "studentProfiles", user.uid);
+            const profileSnap = await getDoc(profileRef);
+
+            if (profileSnap.exists()) {
+                const data = profileSnap.data();
+
+                studentName =
+                    data.studentName ||
+                    data.name ||
+                    data.fullName ||
+                    studentName;
+            }
+        } catch (error) {
+            console.error("Profile loading error:", error);
+        }
+
+        if (!studentName && user.email) {
+            studentName = user.email.split("@")[0];
+        }
+
+        if (!studentName) {
+            studentName = "Student";
+        }
+
+        const initials = studentName
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+            .slice(0, 2)
+            .map(word => word.charAt(0).toUpperCase())
+            .join("");
+
+        const profileInitials =
+            document.getElementById("headerProfileInitials");
+
+        const welcomeHeading =
+            document.getElementById("welcomeHeading");
+
+        if (profileInitials) {
+            profileInitials.textContent = initials || "S";
+        }
+
+        if (welcomeHeading) {
+            welcomeHeading.textContent = "Welcome, " + studentName + "! 👋";
+        }
+    });
+</script>
+
 <script type="module" src="dashboard-firebase.js"></script>
+
 </body>
 </html>

@@ -5,7 +5,8 @@ import {
     signInWithEmailAndPassword,
     updateProfile,
     GoogleAuthProvider,
-    signInWithPopup
+    signInWithPopup,
+    signOut
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
 import {
@@ -17,34 +18,43 @@ import {
 
 const loginForm = document.getElementById("loginForm");
 const registerForm = document.getElementById("registerForm");
-const googleLoginButton = document.getElementById("googleLoginButton");
+const googleButton = document.getElementById("googleLoginButton");
+
+function showMessage(message) {
+    alert(message);
+}
 
 function getErrorMessage(error) {
+    console.error("Firebase error:", error);
+
     const errors = {
-        "auth/email-already-in-use": "This email is already registered.",
+        "auth/email-already-in-use": "This email is already registered. Please sign in.",
         "auth/invalid-email": "Please enter a valid email address.",
         "auth/weak-password": "Password must contain at least 6 characters.",
         "auth/invalid-credential": "Incorrect email or password.",
-        "auth/user-not-found": "Account not found. Please register first.",
+        "auth/user-not-found": "Account not found. Please create an account first.",
         "auth/popup-closed-by-user": "Google sign-in was cancelled.",
-        "auth/popup-blocked": "Allow popups and try again."
+        "auth/popup-blocked": "Allow popups in your browser and try again.",
+        "auth/unauthorized-domain": "This website domain is not authorized in Firebase Authentication.",
+        "auth/operation-not-allowed": "This login method is not enabled in Firebase."
     };
 
     return errors[error.code] || error.message || "Something went wrong.";
 }
 
+// CREATE STUDENT PROFILE
 async function createStudentProfile(user, name = "") {
     const privateRef = doc(db, "studentProfiles", user.uid);
     const publicRef = doc(db, "publicProfiles", user.uid);
-
-    const privateSnapshot = await getDoc(privateRef);
-    const publicSnapshot = await getDoc(publicRef);
 
     const studentName =
         name ||
         user.displayName ||
         user.email?.split("@")[0] ||
         "Student";
+
+    const privateSnapshot = await getDoc(privateRef);
+    const publicSnapshot = await getDoc(publicRef);
 
     if (!privateSnapshot.exists()) {
         await setDoc(privateRef, {
@@ -78,9 +88,9 @@ async function createStudentProfile(user, name = "") {
     }
 }
 
-// Registration
+// REGISTER WITH EMAIL
 if (registerForm) {
-    registerForm.addEventListener("submit", async function(event) {
+    registerForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const name = document.getElementById("registerName").value.trim();
@@ -88,9 +98,18 @@ if (registerForm) {
         const password = document.getElementById("registerPassword").value;
 
         if (!name || !email || !password) {
-            alert("Please fill all fields.");
+            showMessage("Please fill all fields.");
             return;
         }
+
+        if (password.length < 6) {
+            showMessage("Password must contain at least 6 characters.");
+            return;
+        }
+
+        const submitButton = registerForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.textContent = "Creating Account...";
 
         try {
             const result = await createUserWithEmailAndPassword(
@@ -105,23 +124,34 @@ if (registerForm) {
 
             await createStudentProfile(result.user, name);
 
-            alert("Account created successfully!");
+            showMessage("Account created successfully!");
             window.location.href = "dashboard.html";
 
         } catch (error) {
-            console.error("Registration error:", error);
-            alert(getErrorMessage(error));
+            showMessage(getErrorMessage(error));
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "Create Account →";
         }
     });
 }
 
-// Email login
+// LOGIN WITH EMAIL
 if (loginForm) {
-    loginForm.addEventListener("submit", async function(event) {
+    loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const email = document.getElementById("loginEmail").value.trim();
         const password = document.getElementById("loginPassword").value;
+
+        if (!email || !password) {
+            showMessage("Please enter your email and password.");
+            return;
+        }
+
+        const submitButton = loginForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.textContent = "Signing In...";
 
         try {
             const result = await signInWithEmailAndPassword(
@@ -135,16 +165,24 @@ if (loginForm) {
             window.location.href = "dashboard.html";
 
         } catch (error) {
-            console.error("Login error:", error);
-            alert(getErrorMessage(error));
+            showMessage(getErrorMessage(error));
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "Login to Account →";
         }
     });
 }
 
-// Google login
-if (googleLoginButton) {
-    googleLoginButton.addEventListener("click", async function() {
+// GOOGLE LOGIN
+if (googleButton) {
+    googleButton.addEventListener("click", async () => {
         const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({
+            prompt: "select_account"
+        });
+
+        googleButton.disabled = true;
+        googleButton.textContent = "Connecting to Google...";
 
         try {
             const result = await signInWithPopup(auth, provider);
@@ -154,8 +192,10 @@ if (googleLoginButton) {
             window.location.href = "dashboard.html";
 
         } catch (error) {
-            console.error("Google login error:", error);
-            alert(getErrorMessage(error));
+            showMessage(getErrorMessage(error));
+        } finally {
+            googleButton.disabled = false;
+            googleButton.textContent = "Continue with Google";
         }
     });
 }
