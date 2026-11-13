@@ -11,7 +11,6 @@ import {
     query,
     where,
     doc,
-    getDoc,
     setDoc,
     updateDoc,
     serverTimestamp
@@ -24,7 +23,6 @@ const requestsBox = document.getElementById("connectionRequests");
 let currentUser = null;
 let allStudents = [];
 
-// SINGLE COLUMN LAYOUT
 function applySingleColumnLayout(container) {
     if (!container) return;
 
@@ -53,6 +51,8 @@ onAuthStateChanged(auth, async function(user) {
 
 // LOAD STUDENTS
 async function loadStudents() {
+    if (!studentList) return;
+
     studentList.textContent = "Loading students...";
 
     try {
@@ -102,6 +102,8 @@ async function loadStudents() {
 
 // DISPLAY STUDENTS
 function displayStudents(students) {
+    if (!studentList) return;
+
     studentList.innerHTML = "";
     applySingleColumnLayout(studentList);
 
@@ -169,7 +171,7 @@ function displayStudents(students) {
     });
 }
 
-// HANDLE TEXT OR ARRAY VALUES
+// FORMAT TEXT OR ARRAY
 function formatValue(value) {
     if (Array.isArray(value)) {
         return value.join(", ");
@@ -260,6 +262,8 @@ async function sendRequest(student, button) {
 
 // LOAD CONNECTION REQUESTS
 async function loadRequests() {
+    if (!requestsBox) return;
+
     requestsBox.textContent = "Loading requests...";
     applySingleColumnLayout(requestsBox);
 
@@ -366,7 +370,7 @@ function showRequest(item, type) {
         card.appendChild(acceptButton);
     }
 
-    // OPEN CHAT AFTER ACCEPTANCE
+    // OPEN CHAT
     if (request.status === "Accepted") {
         const messageButton = document.createElement("button");
         messageButton.type = "button";
@@ -388,22 +392,24 @@ async function openChat(requestId, request, button) {
     button.textContent = "Opening Chat...";
 
     try {
-        const chatRef = doc(db, "chats", requestId);
-        const participants = [
-            request.senderUid,
-            request.recipientUid
-        ];
-
-        const chatSnapshot = await getDoc(chatRef);
-
-        if (!chatSnapshot.exists()) {
-            await setDoc(chatRef, {
-                connectionRequestId: requestId,
-                participants: participants,
-                lastMessage: "",
-                lastMessageAt: serverTimestamp()
-            });
+        if (
+            request.status !== "Accepted" ||
+            ![request.senderUid, request.recipientUid].includes(currentUser.uid)
+        ) {
+            throw new Error("This connection is not accepted.");
         }
+
+        const chatRef = doc(db, "chats", requestId);
+
+        // Create the chat if missing, or preserve existing messages.
+        // This avoids reading a possibly non-existent chat document first.
+        await setDoc(chatRef, {
+            connectionRequestId: requestId,
+            participants: [
+                request.senderUid,
+                request.recipientUid
+            ]
+        }, { merge: true });
 
         window.location.href =
             "chat.html?chatId=" + encodeURIComponent(requestId);
